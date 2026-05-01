@@ -363,7 +363,11 @@ function OilBasketIcon() {
 
 function Home({ products, go, addToCart, setQuickView, setSelectedProduct }) {
   const [slide, setSlide] = useState(0);
-  const heroImages = products.slice(0, 3).map((product) => product.images[4] || product.images[0]);
+  const heroImages = [
+    'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90',
+    'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=90',
+    'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1800&q=90'
+  ];
   useEffect(() => {
     const timer = setInterval(() => setSlide((current) => (current + 1) % heroImages.length), 4200);
     return () => clearInterval(timer);
