@@ -268,7 +268,7 @@ function App() {
         {page === 'blog' && <Blog />}
       </main>
       <Footer go={go} />
-      <a className="whatsapp" href="https://wa.me/919876543210?text=Hello%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer" aria-label="WhatsApp Sai Agro Foods">
+      <a className="whatsapp" href="https://wa.me/919944534337?text=Hello%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer" aria-label="WhatsApp Sai Agro Foods">
         <Phone size={22} />
       </a>
       {quickView && <QuickView product={quickView} close={() => setQuickView(null)} addToCart={addToCart} />}
@@ -596,7 +596,7 @@ function Details({ product, addToCart, go, setSelectedProduct }) {
           <div className="hero-actions">
             <button className="primary" onClick={() => addToCart(product, qty)}>Add to Cart</button>
             <button className="secondary" onClick={() => { addToCart(product, qty); go('cart'); }}>Buy Now</button>
-            <a className="whatsapp-button" href={`https://wa.me/919876543210?text=I%20want%20to%20order%20${encodeURIComponent(product.name)}%20x%20${qty}`} target="_blank" rel="noreferrer">Buy on WhatsApp</a>
+            <a className="whatsapp-button" href={`https://wa.me/919944534337?text=I%20want%20to%20order%20${encodeURIComponent(product.name)}%20x%20${qty}`} target="_blank" rel="noreferrer">Buy on WhatsApp</a>
           </div>
           <div className="trust-strip">✓ Cold-pressed weekly · ✓ FSSAI ready · ✓ Ships in 48h · ✓ COD in Tamil Nadu</div>
           <div className="tabs">
@@ -656,7 +656,7 @@ function Cart({ cart, subtotal, updateQty, go }) {
         <div className="summary-line"><span>Shipping</span><b>{shipping ? `₹${shipping}` : 'Free'}</b></div>
         <div className="summary-line total"><span>Total</span><b>₹{total}</b></div>
         <button className="primary full" onClick={() => go('checkout')}>Proceed to Checkout</button>
-        <a className="whatsapp-button full" href="https://wa.me/919876543210?text=I%20want%20to%20place%20an%20order%20with%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer">Order on WhatsApp</a>
+        <a className="whatsapp-button full" href="https://wa.me/919944534337?text=I%20want%20to%20place%20an%20order%20with%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer">Order on WhatsApp</a>
       </aside>
     </section>
   );
@@ -756,8 +756,9 @@ function Contact() {
       <section className="contact-grid">
         <div className="contact-card">
           <h2>Manufacturer Direct Enquiries</h2>
+          <p><Heart size={18} /> Owner: Mr. Saravanakumar Selvaraj</p>
           <p><MapPin size={18} /> Pasupathipalayam, Karur, Tamil Nadu, India</p>
-          <p><Phone size={18} /> +91 98765 43210</p>
+          <p><Phone size={18} /> +91 99445 34337</p>
           <p><Mail size={18} /> sales@saiagrofoods.in</p>
           <p><Truck size={18} /> Mill hours: Mon-Sat, 8 AM-6 PM</p>
           <iframe title="Sai Agro Foods map" src="https://www.google.com/maps?q=Pasupathipalayam%20Karur%20Tamil%20Nadu&output=embed" loading="lazy" />
@@ -855,7 +856,7 @@ function Footer({ go }) {
       </div>
       <div><strong>Shop</strong><button onClick={() => go('products')}>Edible Oils</button><button onClick={() => go('products')}>Peanuts</button><button onClick={() => go('cart')}>Cart</button></div>
       <div><strong>Company</strong><button onClick={() => go('about')}>About</button><button onClick={() => go('process')}>Process</button><button onClick={() => go('recipes')}>Recipes</button><button onClick={() => go('faq')}>FAQ</button><button onClick={() => go('contact')}>Contact</button></div>
-      <div><strong>Contact</strong><span>Pasupathipalayam, Karur</span><span>+91 98765 43210</span><span>sales@saiagrofoods.in</span></div>
+      <div><strong>Contact</strong><span>Owner: Mr. Saravanakumar Selvaraj</span><span>Pasupathipalayam, Karur</span><span>+91 99445 34337</span><span>sales@saiagrofoods.in</span></div>
     </footer>
   );
 }
