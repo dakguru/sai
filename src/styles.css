@@ -185,16 +185,29 @@ nav button.active, nav button:hover { background: rgba(244, 179, 35, .18); color
 .menu-button { display: none; }
 
 .hero {
-  min-height: calc(100vh - 76px);
+  min-height: min(720px, calc(100vh - 76px));
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) 380px;
   align-items: end;
   gap: 34px;
-  padding: clamp(80px, 9vw, 128px) clamp(20px, 5vw, 76px) 42px;
-  background-size: cover;
-  background-position: center;
+  padding: clamp(64px, 7vw, 96px) clamp(20px, 5vw, 76px) 34px;
+  background-color: #e6dfcf;
+  background-size: cover, min(52vw, 720px) auto;
+  background-position: center, center right 18%;
+  background-repeat: no-repeat;
   transition: background-image .6s ease;
+  position: relative;
+  overflow: hidden;
 }
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+}
+.hero > * { position: relative; z-index: 1; }
 .hero-copy { max-width: 760px; color: white; padding-bottom: clamp(20px, 6vw, 80px); }
 .eyebrow, .kicker {
   display: inline-flex;
@@ -805,7 +818,7 @@ footer strong { display: block; margin-bottom: 10px; }
 
 @media (max-width: 1060px) {
   .hero, .details, .cart-page, .contact-grid, .split-section, .newsletter, .process-story { grid-template-columns: 1fr; }
-  .hero { min-height: auto; }
+  .hero { min-height: auto; background-size: cover, min(72vw, 520px) auto; background-position: center, top right -12%; }
   .hero-panel { max-width: 430px; }
   .trust-band, .testimonial-grid, .process-grid, .product-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
   .shop-layout { grid-template-columns: 1fr; }
@@ -834,7 +847,7 @@ footer strong { display: block; margin-bottom: 10px; }
   .brand strong { font-size: .95rem; }
   .brand small { font-size: .72rem; }
   .logo { width: 42px; height: 42px; }
-  .hero { grid-template-columns: 1fr; padding-top: 96px; }
+  .hero { grid-template-columns: 1fr; padding-top: 88px; background-size: cover, 112vw auto; background-position: center, top 28px center; }
   h1 { font-size: clamp(2.65rem, 15vw, 4.2rem); }
   .hero-copy { padding-bottom: 0; }
   .hero-panel { width: 100%; }
