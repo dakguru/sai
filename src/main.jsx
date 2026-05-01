@@ -4,6 +4,7 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronLeft,
+  ChevronRight,
   Factory,
   Filter,
   Heart,
@@ -327,9 +328,17 @@ function Loader() {
 }
 
 function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
+  const [scrolled, setScrolled] = useState(false);
   const links = [['home', 'Home'], ['about', 'About'], ['products', 'Products'], ['process', 'Process'], ['recipes', 'Recipes'], ['faq', 'FAQ'], ['contact', 'Contact']];
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  const overHero = page === 'home' && !scrolled;
   return (
-    <header className="site-header">
+    <header className={`site-header ${page === 'home' ? 'home-nav' : ''} ${overHero ? 'over-hero' : ''}`}>
       <button className="brand" onClick={() => go('home')} aria-label="Sai Agro Foods home">
         <span className="logo"><Leaf size={24} /><span /></span>
         <span><strong>Sai Agro Foods</strong><small>Purity in Every Drop</small></span>
@@ -363,19 +372,64 @@ function OilBasketIcon() {
 
 function Home({ products, go, addToCart, setQuickView, setSelectedProduct }) {
   const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const heroImages = [
     'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90',
     'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=90',
     'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1800&q=90'
   ];
+  const slideAlt = [
+    'A wide wheat field in warm natural light',
+    'Tamil Nadu farmland glowing in a golden evening field',
+    'South Indian spices and ingredients in warm kitchen light'
+  ];
+  const slideFocal = ['center', 'center 60%', 'center'];
+  const nextSlide = () => setSlide((current) => (current + 1) % heroImages.length);
+  const prevSlide = () => setSlide((current) => (current - 1 + heroImages.length) % heroImages.length);
   useEffect(() => {
-    const timer = setInterval(() => setSlide((current) => (current + 1) % heroImages.length), 4200);
+    if (paused || reducedMotion) return undefined;
+    const timer = setInterval(nextSlide, 5500);
     return () => clearInterval(timer);
-  }, [heroImages.length]);
+  }, [heroImages.length, paused, reducedMotion]);
+  useEffect(() => {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(motion.matches);
+    const onMotion = (event) => setReducedMotion(event.matches);
+    motion.addEventListener?.('change', onMotion);
+    return () => motion.removeEventListener?.('change', onMotion);
+  }, []);
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'ArrowRight') nextSlide();
+      if (event.key === 'ArrowLeft') prevSlide();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const featured = products.filter((product) => product.featured).slice(0, 4);
   return (
     <>
-      <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(38,27,12,.82), rgba(38,27,12,.46), rgba(38,27,12,.12)), url(${heroImages[slide]})` }}>
+      <section className="hero" aria-label="Hero" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="hero-slides" aria-hidden="true">
+          {heroImages.map((image, index) => (
+            <img
+              key={image}
+              className={`hero-slide ${index === slide ? 'active' : ''} ${reducedMotion ? 'reduced' : ''}`}
+              src={image}
+              alt=""
+              style={{ objectPosition: slideFocal[index] }}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          ))}
+        </div>
+        <div className="hero-scrim" />
+        <span className="sr-only" aria-live="polite">{slideAlt[slide]}</span>
         <div className="hero-copy reveal">
           <span className="eyebrow"><Sprout size={16} /> Manufacturer Direct from Karur</span>
           <h1>Pressed slow. Poured pure.</h1>
@@ -391,6 +445,17 @@ function Home({ products, go, addToCart, setQuickView, setSelectedProduct }) {
           <span>Groundnut, gingelly, coconut, castor, lamp oil, peanuts, and Sai Gold trade packs.</span>
           <div className="metric-row"><b>7</b><small>real products live now</small></div>
         </div>
+        <div className="hero-controls">
+          <div className="hero-dots">
+            {heroImages.map((_, index) => (
+              <button key={index} className={index === slide ? 'active' : ''} onClick={() => setSlide(index)} aria-label={`Go to slide ${index + 1}`} />
+            ))}
+          </div>
+          <span className="hero-counter">{String(slide + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span>
+          <span key={slide} className={`hero-progress ${paused || reducedMotion ? 'paused' : ''}`} />
+        </div>
+        <button className="hero-arrow previous" onClick={prevSlide} aria-label="Previous slide"><ChevronLeft size={22} /></button>
+        <button className="hero-arrow next" onClick={nextSlide} aria-label="Next slide"><ChevronRight size={22} /></button>
       </section>
       <SprigDivider />
       <TrustBand />
