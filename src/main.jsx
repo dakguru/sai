@@ -756,7 +756,7 @@ function Contact() {
       <section className="contact-grid">
         <div className="contact-card">
           <h2>Manufacturer Direct Enquiries</h2>
-          <p><Heart size={18} /> Owner: Mr. Saravanakumar Selvaraj</p>
+          <p><Heart size={18} /> Mr. Saravanakumar Selvaraj</p>
           <p><MapPin size={18} /> Pasupathipalayam, Karur, Tamil Nadu, India</p>
           <p><Phone size={18} /> +91 99445 34337</p>
           <p><Mail size={18} /> sales@saiagrofoods.in</p>
@@ -856,7 +856,8 @@ function Footer({ go }) {
       </div>
       <div><strong>Shop</strong><button onClick={() => go('products')}>Edible Oils</button><button onClick={() => go('products')}>Peanuts</button><button onClick={() => go('cart')}>Cart</button></div>
       <div><strong>Company</strong><button onClick={() => go('about')}>About</button><button onClick={() => go('process')}>Process</button><button onClick={() => go('recipes')}>Recipes</button><button onClick={() => go('faq')}>FAQ</button><button onClick={() => go('contact')}>Contact</button></div>
-      <div><strong>Contact</strong><span>Owner: Mr. Saravanakumar Selvaraj</span><span>Pasupathipalayam, Karur</span><span>+91 99445 34337</span><span>sales@saiagrofoods.in</span></div>
+      <div><strong>Contact</strong><span>Mr. Saravanakumar Selvaraj</span><span>Pasupathipalayam, Karur</span><span>+91 99445 34337</span><span>sales@saiagrofoods.in</span></div>
+      <div className="developer-credit">Website & App Developed and Maintained by DG InfoTech, India</div>
     </footer>
   );
 }

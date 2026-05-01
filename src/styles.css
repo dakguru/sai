@@ -785,6 +785,14 @@ footer button { color: rgba(255,255,255,.76); text-align: left; padding: 8px 0; 
 footer strong { display: block; margin-bottom: 10px; }
 .footer-brand { color: white; margin-bottom: 16px; }
 .footer-brand small { color: #ffe18c; }
+.developer-credit {
+  grid-column: 1 / -1;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.58);
+  font-size: .92rem;
+  line-height: 1.6;
+}
 
 .reveal { animation: rise .7s ease both; }
 .delay { animation-delay: .2s; }
