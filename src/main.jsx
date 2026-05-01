@@ -2,10 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
-  Award,
   CheckCircle2,
   ChevronLeft,
-  ChevronRight,
   Factory,
   Filter,
   Heart,
@@ -19,7 +17,6 @@ import {
   Plus,
   Search,
   ShieldCheck,
-  ShoppingBag,
   Sprout,
   Star,
   Truck,
@@ -27,152 +24,119 @@ import {
   X,
   Zap
 } from 'lucide-react';
+import {
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  announcementDefaults,
+  categoryLabels,
+  primaryVariant,
+  productPriceRange,
+  seedProducts
+} from './products.js';
 import './styles.css';
 
-const products = [
-  {
-    id: 'groundnut-oil',
-    name: 'Cold Pressed Groundnut Oil',
-    category: 'Edible Oils',
-    type: 'Groundnut',
-    price: 329,
-    size: '1 Litre',
-    hero: 'https://images.unsplash.com/photo-1608797178974-15b35a64ede9?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Best Seller',
-    desc: 'Sun-dried Karur groundnuts, crushed slowly in our mara chekku, settled overnight, and bottled by hand.',
-    benefits: ['Rich nutty flavour', 'Ideal for deep frying', 'No added preservatives'],
-    usage: 'Use for dosa, stir fry, chutney tempering, snacks and traditional sweets.'
+const storage = {
+  products: 'sai-agro-v2-products',
+  cart: 'sai-agro-cart',
+  session: 'sai-agro-admin-session',
+  audit: 'sai-agro-audit-log',
+  site: 'sai-agro-site-settings',
+  orders: 'sai-agro-orders'
+};
+
+const siteDefaults = {
+  announcements: announcementDefaults,
+  footer: {
+    address: 'Pasupathipalayam, Karur, Tamil Nadu',
+    phone: '+91 99445 34337',
+    whatsapp: '919944534337',
+    email: 'sales@saiagrofoods.in',
+    hours: 'Mon-Sat, 8 AM-6 PM'
   },
-  {
-    id: 'sesame-oil',
-    name: 'Traditional Sesame Oil',
-    category: 'Edible Oils',
-    type: 'Sesame',
-    price: 389,
-    size: '1 Litre',
-    hero: 'https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Cold Pressed',
-    desc: 'Deep golden gingelly oil with a clean sesame aroma and smooth finish.',
-    benefits: ['Traditional cooking staple', 'Naturally antioxidant rich', 'Great for pickles'],
-    usage: 'Perfect for kuzhambu, podi rice, pickling and oil bath traditions.'
-  },
-  {
-    id: 'coconut-oil',
-    name: 'Virgin Coconut Oil',
-    category: 'Edible Oils',
-    type: 'Coconut',
-    price: 299,
-    size: '500 ml',
-    hero: 'https://images.unsplash.com/photo-1580984969071-a8da5656c2fb?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Fresh Batch',
-    desc: 'Naturally fragrant coconut oil packed in small batches for freshness.',
-    benefits: ['Clean aroma', 'Multipurpose kitchen use', 'Small-batch packed'],
-    usage: 'Use in Kerala-style cooking, baking, hair care and daily wellness routines.'
-  },
-  {
-    id: 'premium-peanuts',
-    name: 'Raw Karur Peanuts',
-    category: 'Peanuts',
-    type: 'Raw',
-    price: 179,
-    size: '1 kg',
-    hero: 'https://images.unsplash.com/photo-1567892737950-30c4db37cd89?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Farm Grade',
-    desc: 'Uniformly sorted peanuts for cooking, roasting, chutney and oil extraction.',
-    benefits: ['Bold kernels', 'Clean sorted stock', 'Bulk-ready supply'],
-    usage: 'Roast for snacks, grind for chutneys, or use in sweets and savouries.'
-  },
-  {
-    id: 'bulk-groundnut',
-    name: 'Groundnut Oil Bulk Tin',
-    category: 'Edible Oils',
-    type: 'Groundnut',
-    price: 2890,
-    size: '15 kg',
-    hero: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Bulk Buyer',
-    desc: 'Manufacturer-direct oil tin for hotels, caterers and retail resellers.',
-    benefits: ['Wholesale pricing', 'Batch traceability', 'Reliable dispatch'],
-    usage: 'Designed for restaurants, sweet stalls, grocery stores and distributors.'
-  },
-  {
-    id: 'roasted-peanuts',
-    name: 'Roasted & Salted Peanuts',
-    category: 'Peanuts',
-    type: 'Roasted',
-    price: 129,
-    size: '500 g',
-    hero: 'https://images.unsplash.com/photo-1524593166156-312f362cada0?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Snack Pack',
-    desc: 'Crunchy roasted peanuts with a clean, naturally sweet finish.',
-    benefits: ['Protein rich snack', 'Freshly roasted', 'Family pack'],
-    usage: 'Serve as tea-time snack, salad topping, chaat mix or travel food.'
-  },
-  {
-    id: 'sunflower-oil',
-    name: 'Cold Pressed Sunflower Oil',
-    category: 'Edible Oils',
-    type: 'Sunflower',
-    price: 279,
-    size: '1 Litre',
-    hero: 'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?auto=format&fit=crop&w=1200&q=85',
-    badge: 'New Harvest',
-    desc: 'Light everyday cooking oil pressed from clean sunflower seeds for modern family kitchens.',
-    benefits: ['Light cooking profile', 'Good for daily meals', 'Fresh batch packing'],
-    usage: 'Use for poriyal, chapati dough, light frying and everyday family cooking.'
-  },
-  {
-    id: 'jaggery-peanuts',
-    name: 'Jaggery Coated Peanuts',
-    category: 'Peanuts',
-    type: 'Jaggery',
-    price: 99,
-    size: '200 g',
-    hero: 'https://images.unsplash.com/photo-1606791405792-1004f1718d0c?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Kadalai Mittai',
-    desc: 'Crunchy peanuts coated with jaggery for a nostalgic Tamil Nadu snack.',
-    benefits: ['Traditional sweet', 'Travel friendly', 'No artificial colour'],
-    usage: 'Serve after meals, pack for school snacks, or pair with evening tea.'
-  },
-  {
-    id: 'masala-peanuts',
-    name: 'Masala Peanuts',
-    category: 'Peanuts',
-    type: 'Masala',
-    price: 89,
-    size: '200 g',
-    hero: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=1200&q=85',
-    badge: 'Snack Pack',
-    desc: 'Spiced peanut snack with a crisp coating and balanced masala heat.',
-    benefits: ['Crisp texture', 'Tea-time favourite', 'Party bowl ready'],
-    usage: 'Use as a snack, chaat topping, lunchbox crunch or travel companion.'
-  }
+  freeShippingThreshold: 999,
+  shippingRate: 80,
+  bannerEnabled: false,
+  bannerText: 'Festival batches now pressing in Karur'
+};
+
+const process = [
+  ['Raw Material Selection', 'Bold nuts and seeds are checked for freshness, aroma, and consistency.', Wheat],
+  ['Cleaning & Sorting', 'Dust, stones, and immature kernels are removed before pressing.', Filter],
+  ['Cold Press Extraction', 'Slow extraction protects aroma, texture, and natural character.', Factory],
+  ['Settling & Filtration', 'Oil rests before cotton-cloth filtration and hand packing.', ShieldCheck],
+  ['Batch Packing', 'Every pack is sealed with care for retail and trade buyers.', PackageCheck]
 ];
 
 const testimonials = [
-  ['Reliable quality every month. The groundnut oil aroma is exactly what our customers ask for.', 'Ramesh K.', 'Karur Grocery Partner'],
-  ['We switched to Sai Agro Foods for our home cooking. The sesame oil tastes traditional and clean.', 'Meena S.', 'Retail Customer'],
-  ['Bulk supply, clear communication and consistent packing. A strong manufacturer-direct partner.', 'Arun Caterers', 'Food Service Buyer']
+  ['The groundnut oil aroma is exactly what our customers ask for every month.', 'Ramesh K.', 'Karur Grocery Partner'],
+  ['The gingelly oil tastes traditional and clean. We use it for kuzhambu and podi rice.', 'Meena S.', 'Retail Customer'],
+  ['Bulk supply, clear communication, and consistent packing from a dependable local mill.', 'Arun Caterers', 'Food Service Buyer']
 ];
 
-const process = [
-  ['Raw Material Selection', 'Bold peanuts and oil seeds are checked for freshness and consistency.', Wheat],
-  ['Cleaning & Sorting', 'Dust, stones and immature kernels are removed before pressing.', Filter],
-  ['Cold Press Extraction', 'Slow extraction protects aroma, texture and natural character.', Factory],
-  ['Settling & Filtration', 'Oil is naturally settled and filtered for clean everyday cooking.', ShieldCheck],
-  ['Batch Packing', 'Every pack is sealed with care for retail and bulk buyers.', PackageCheck]
-];
+const blankProduct = () => ({
+  id: `product-${Date.now()}`,
+  slug: '',
+  name: '',
+  tamil: '',
+  subBrand: 'Kani Chekku',
+  category: 'edible-oils',
+  tagline: '',
+  shortDesc: '',
+  longDesc: '',
+  nutrition: '',
+  shelfLife: '',
+  badges: [],
+  variants: [{ sku: '', size: '1 Litre', price: 0, stock: true, primary: true }],
+  images: [],
+  featured: false,
+  batchNo: `SAF-${String(Date.now()).slice(-4)}`,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+});
+
+function readJson(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function useStoredState(key, fallback) {
+  const [value, setValue] = useState(() => readJson(key, fallback));
+  useEffect(() => localStorage.setItem(key, JSON.stringify(value)), [key, value]);
+  return [value, setValue];
+}
+
+function slugify(value) {
+  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function formatInr(value) {
+  return `₹${Number(value || 0).toLocaleString('en-IN')}`;
+}
+
+function variantKey(product, variant) {
+  return `${product.slug}:${variant.sku}`;
+}
+
+function categoryText(category) {
+  return categoryLabels[category] || category;
+}
 
 function App() {
-  const [page, setPage] = useState('home');
-  const [cart, setCart] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('sai-agro-cart') || '[]');
-    } catch {
-      return [];
-    }
-  });
+  const initialRoute = window.location.pathname.startsWith('/admin') ? 'admin' : 'home';
+  const [page, setPage] = useState(initialRoute);
+  const [adminPage, setAdminPage] = useState(window.location.pathname.includes('/admin/products') ? 'products' : 'dashboard');
+  const [products, setProducts] = useStoredState(storage.products, seedProducts);
+  const [site, setSite] = useStoredState(storage.site, siteDefaults);
+  const [cart, setCart] = useStoredState(storage.cart, []);
+  const [audit, setAudit] = useStoredState(storage.audit, []);
+  const [orders, setOrders] = useStoredState(storage.orders, []);
   const [category, setCategory] = useState('All');
+  const [subBrand, setSubBrand] = useState('All');
+  const [packSize, setPackSize] = useState('All');
   const [sort, setSort] = useState('featured');
   const [query, setQuery] = useState('');
   const [quickView, setQuickView] = useState(null);
@@ -181,70 +145,123 @@ function App() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 650);
+    const timer = setTimeout(() => setLoaded(true), 450);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('sai-agro-cart', JSON.stringify(cart));
-  }, [cart]);
-
+  const activeProduct = products.find((item) => item.slug === selectedProduct?.slug) || products[0];
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   const filteredProducts = useMemo(() => {
     const list = products
-      .filter((product) => category === 'All' || product.category === category)
-      .filter((product) => product.name.toLowerCase().includes(query.toLowerCase()));
-    if (sort === 'low') return [...list].sort((a, b) => a.price - b.price);
-    if (sort === 'high') return [...list].sort((a, b) => b.price - a.price);
-    return list;
-  }, [category, query, sort]);
+      .filter((product) => !product.archived)
+      .filter((product) => {
+        if (category === 'All') return true;
+        if (category === 'Bulk / Trade') return product.variants.some((variant) => variant.tradePack);
+        return product.category === category;
+      })
+      .filter((product) => subBrand === 'All' || product.subBrand === subBrand)
+      .filter((product) => packSize === 'All' || product.variants.some((variant) => variant.size.includes(packSize) || (packSize === 'Box' && variant.size.includes('Box'))))
+      .filter((product) => `${product.name} ${product.subBrand} ${product.shortDesc}`.toLowerCase().includes(query.toLowerCase()));
+
+    if (sort === 'low') return [...list].sort((a, b) => primaryVariant(a).price - primaryVariant(b).price);
+    if (sort === 'high') return [...list].sort((a, b) => primaryVariant(b).price - primaryVariant(a).price);
+    if (sort === 'newest') return [...list].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return [...list].sort((a, b) => Number(b.featured) - Number(a.featured));
+  }, [category, packSize, products, query, sort, subBrand]);
+
+  function pushPath(nextPage) {
+    const path = nextPage === 'admin' ? '/admin' : '/';
+    window.history.pushState({}, '', path);
+  }
 
   function go(nextPage) {
     setPage(nextPage);
     setMobileOpen(false);
+    pushPath(nextPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function addToCart(product, qty = 1) {
+  function log(action, entity, delta) {
+    setAudit((items) => [{ at: new Date().toISOString(), email: ADMIN_EMAIL, action, entity, delta }, ...items].slice(0, 80));
+  }
+
+  function saveProducts(nextProducts, action = 'save', entity = 'product catalog', delta = 'Updated product data') {
+    setProducts(nextProducts.map((product) => ({ ...product, updatedAt: product.updatedAt || new Date().toISOString() })));
+    log(action, entity, delta);
+  }
+
+  function addToCart(product, variant = primaryVariant(product), qty = 1) {
+    const itemId = variantKey(product, variant);
     setCart((items) => {
-      const existing = items.find((item) => item.id === product.id);
-      if (existing) return items.map((item) => (item.id === product.id ? { ...item, qty: item.qty + qty } : item));
-      return [...items, { ...product, qty }];
+      const existing = items.find((item) => item.id === itemId);
+      if (existing) return items.map((item) => (item.id === itemId ? { ...item, qty: item.qty + qty } : item));
+      return [...items, {
+        id: itemId,
+        productSlug: product.slug,
+        sku: variant.sku,
+        name: product.name,
+        size: variant.size,
+        price: variant.price,
+        image: product.images[0],
+        qty
+      }];
     });
   }
 
   function updateQty(id, delta) {
-    setCart((items) =>
-      items
-        .map((item) => (item.id === id ? { ...item, qty: Math.max(0, item.qty + delta) } : item))
-        .filter((item) => item.qty > 0)
-    );
+    setCart((items) => items.map((item) => (item.id === id ? { ...item, qty: Math.max(0, item.qty + delta) } : item)).filter((item) => item.qty > 0));
+  }
+
+  function captureOrder(customer) {
+    const order = {
+      id: `SAF-${Date.now().toString().slice(-6)}`,
+      createdAt: new Date().toISOString(),
+      status: 'new',
+      customer,
+      items: cart,
+      total: subtotal + (subtotal > site.freeShippingThreshold || subtotal === 0 ? 0 : site.shippingRate)
+    };
+    setOrders((items) => [order, ...items]);
+    log('create', 'order', `${order.id} captured from checkout`);
+    setCart([]);
   }
 
   return (
     <>
       {!loaded && <Loader />}
-      <SkipLink />
-      <AnnouncementBar />
-      <OilDropCursor />
-      <Header page={page} go={go} cartCount={cartCount} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+      {page !== 'admin' && <SkipLink />}
+      {page !== 'admin' && <AnnouncementBar messages={site.announcements} />}
+      {page !== 'admin' && <OilDropCursor />}
+      {page !== 'admin' && <Header page={page} go={go} cartCount={cartCount} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />}
       <main id="content">
-        {page === 'home' && (
-          <Home
+        {page === 'admin' && (
+          <AdminApp
+            products={products}
+            saveProducts={saveProducts}
+            site={site}
+            setSite={setSite}
+            audit={audit}
+            log={log}
+            orders={orders}
+            setOrders={setOrders}
+            adminPage={adminPage}
+            setAdminPage={setAdminPage}
             go={go}
-            addToCart={addToCart}
-            setQuickView={setQuickView}
-            setSelectedProduct={setSelectedProduct}
           />
         )}
+        {page === 'home' && <Home products={products} go={go} addToCart={addToCart} setQuickView={setQuickView} setSelectedProduct={setSelectedProduct} />}
         {page === 'about' && <About />}
         {page === 'products' && (
           <Products
             filteredProducts={filteredProducts}
             category={category}
             setCategory={setCategory}
+            subBrand={subBrand}
+            setSubBrand={setSubBrand}
+            packSize={packSize}
+            setPackSize={setPackSize}
             sort={sort}
             setSort={setSort}
             query={query}
@@ -257,20 +274,22 @@ function App() {
             }}
           />
         )}
-        {page === 'details' && <Details product={selectedProduct} addToCart={addToCart} go={go} setSelectedProduct={setSelectedProduct} />}
-        {page === 'cart' && <Cart cart={cart} subtotal={subtotal} updateQty={updateQty} go={go} />}
-        {page === 'checkout' && <CheckoutPage cart={cart} subtotal={subtotal} go={go} />}
+        {page === 'details' && activeProduct && <Details products={products} product={activeProduct} addToCart={addToCart} go={go} setSelectedProduct={setSelectedProduct} />}
+        {page === 'cart' && <Cart cart={cart} subtotal={subtotal} updateQty={updateQty} go={go} site={site} />}
+        {page === 'checkout' && <CheckoutPage cart={cart} subtotal={subtotal} go={go} site={site} captureOrder={captureOrder} />}
         {page === 'process' && <ProcessPage go={go} />}
         {page === 'recipes' && <RecipesPage />}
         {page === 'faq' && <FAQPage />}
         {page === 'thankyou' && <ThankYou go={go} />}
-        {page === 'contact' && <Contact />}
+        {page === 'contact' && <Contact site={site} />}
         {page === 'blog' && <Blog />}
       </main>
-      <Footer go={go} />
-      <a className="whatsapp" href="https://wa.me/919944534337?text=Hello%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer" aria-label="WhatsApp Sai Agro Foods">
-        <Phone size={22} />
-      </a>
+      {page !== 'admin' && <Footer go={go} site={site} />}
+      {page !== 'admin' && (
+        <a className="whatsapp" href={`https://wa.me/${site.footer.whatsapp}?text=Hello%20Sai%20Agro%20Foods`} target="_blank" rel="noreferrer" aria-label="WhatsApp Sai Agro Foods">
+          <Phone size={22} />
+        </a>
+      )}
       {quickView && <QuickView product={quickView} close={() => setQuickView(null)} addToCart={addToCart} />}
     </>
   );
@@ -280,14 +299,8 @@ function SkipLink() {
   return <a className="skip-link" href="#content">Skip to content</a>;
 }
 
-function AnnouncementBar() {
-  return (
-    <div className="announcement">
-      <span>Free shipping across Tamil Nadu on orders ₹999+</span>
-      <span>Cold-pressed weekly</span>
-      <span>Made in Karur</span>
-    </div>
-  );
+function AnnouncementBar({ messages }) {
+  return <div className="announcement">{messages.map((message) => <span key={message}>{message}</span>)}</div>;
 }
 
 function OilDropCursor() {
@@ -303,16 +316,6 @@ function OilDropCursor() {
   return <span className="oil-cursor" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }} />;
 }
 
-function WaveDivider() {
-  return (
-    <div className="wave-divider" aria-hidden="true">
-      <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
-        <path d="M0 40 C180 88 330 5 520 36 C720 68 780 86 990 42 C1180 1 1280 24 1440 48 V90 H0 Z" />
-      </svg>
-    </div>
-  );
-}
-
 function Loader() {
   return (
     <div className="loader">
@@ -324,15 +327,7 @@ function Loader() {
 }
 
 function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
-  const links = [
-    ['home', 'Home'],
-    ['about', 'About'],
-    ['products', 'Products'],
-    ['process', 'Process'],
-    ['recipes', 'Recipes'],
-    ['faq', 'FAQ'],
-    ['contact', 'Contact']
-  ];
+  const links = [['home', 'Home'], ['about', 'About'], ['products', 'Products'], ['process', 'Process'], ['recipes', 'Recipes'], ['faq', 'FAQ'], ['contact', 'Contact']];
   return (
     <header className="site-header">
       <button className="brand" onClick={() => go('home')} aria-label="Sai Agro Foods home">
@@ -340,13 +335,12 @@ function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
         <span><strong>Sai Agro Foods</strong><small>Purity in Every Drop</small></span>
       </button>
       <nav className={mobileOpen ? 'open' : ''}>
-        {links.map(([id, label]) => (
-          <button key={id} className={page === id ? 'active' : ''} onClick={() => go(id)}>{label}</button>
-        ))}
+        {links.map(([id, label]) => <button key={id} className={page === id ? 'active' : ''} onClick={() => go(id)}>{label}</button>)}
       </nav>
       <div className="header-actions">
-        <button className="icon-button" onClick={() => go('cart')} aria-label="Open cart">
-          <ShoppingBag size={21} />
+        <button className="icon-button" onClick={() => go('admin')} aria-label="Open admin">A</button>
+        <button className="icon-button basket-icon" onClick={() => go('cart')} aria-label="Open cart">
+          <OilBasketIcon />
           {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
         </button>
         <button className="icon-button menu-button" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
@@ -357,56 +351,50 @@ function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
   );
 }
 
-function Home({ go, addToCart, setQuickView, setSelectedProduct }) {
-  const [slide, setSlide] = useState(0);
-  const heroImages = [
-    'https://images.unsplash.com/photo-1608797178974-15b35a64ede9?auto=format&fit=crop&w=1800&q=90',
-    'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90',
-    'https://images.unsplash.com/photo-1567892737950-30c4db37cd89?auto=format&fit=crop&w=1800&q=90'
-  ];
+function OilBasketIcon() {
+  return (
+    <svg viewBox="0 0 48 48" width="23" height="23" aria-hidden="true">
+      <path d="M13 21h22l-3 16H16L13 21Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+      <path d="M17 21c1-7 4-10 7-10s6 3 7 10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="M24 5c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z" fill="currentColor" opacity=".28" />
+    </svg>
+  );
+}
 
+function Home({ products, go, addToCart, setQuickView, setSelectedProduct }) {
+  const [slide, setSlide] = useState(0);
+  const heroImages = products.slice(0, 3).map((product) => product.images[4] || product.images[0]);
   useEffect(() => {
     const timer = setInterval(() => setSlide((current) => (current + 1) % heroImages.length), 4200);
     return () => clearInterval(timer);
-  }, []);
-
+  }, [heroImages.length]);
+  const featured = products.filter((product) => product.featured).slice(0, 4);
   return (
     <>
       <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(38,27,12,.82), rgba(38,27,12,.46), rgba(38,27,12,.12)), url(${heroImages[slide]})` }}>
         <div className="hero-copy reveal">
           <span className="eyebrow"><Sprout size={16} /> Manufacturer Direct from Karur</span>
           <h1>Pressed slow. Poured pure.</h1>
-          <span className="tamil-line">மர செக்கு எண்ணெய்</span>
-          <p>Wood-pressed edible oils and hand-sorted peanuts, made in small batches at our family mill in Pasupathipalayam, Karur.</p>
+          <span className="tamil-line">மரசெக்கு எண்ணெய்</span>
+          <p>Cold-pressed oils, slow-roasted peanuts, and pooja essentials - pressed and packed by one family in Pasupathipalayam, Karur.</p>
           <div className="hero-actions">
-            <button className="primary" onClick={() => go('products')}>Shop the Harvest <ArrowRight size={18} /></button>
+            <button className="primary magnetic" onClick={() => go('products')}>Shop the Press <ArrowRight size={18} /></button>
             <button className="secondary" onClick={() => go('process')}>Watch Our Process</button>
           </div>
         </div>
         <div className="hero-panel reveal delay">
           <strong>Fresh Batch Dispatch</strong>
-          <span>Groundnut oil, sesame oil and bulk tins packed with batch care.</span>
-          <div className="metric-row">
-            <b>100%</b><small>Pure & Cold Pressed</small>
-          </div>
+          <span>Groundnut, gingelly, coconut, castor, lamp oil, peanuts, and Sai Gold trade packs.</span>
+          <div className="metric-row"><b>7</b><small>real products live now</small></div>
         </div>
       </section>
-      <WaveDivider />
+      <SprigDivider />
       <TrustBand />
       <section className="section">
-        <SectionTitle kicker="This Week's Harvest" title="Fresh from the chekku" action="View all" onAction={() => go('products')} />
+        <SectionTitle kicker="FROM THIS WEEK'S PRESS" title="Fresh from the chekku" action="View all" onAction={() => go('products')} />
         <div className="carousel">
-          {products.slice(0, 5).map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              addToCart={addToCart}
-              setQuickView={setQuickView}
-              onDetails={() => {
-                setSelectedProduct(product);
-                go('details');
-              }}
-            />
+          {featured.map((product) => (
+            <ProductCard key={product.id} product={product} addToCart={addToCart} setQuickView={setQuickView} onDetails={() => { setSelectedProduct(product); go('details'); }} />
           ))}
         </div>
       </section>
@@ -415,7 +403,7 @@ function Home({ go, addToCart, setQuickView, setSelectedProduct }) {
           <span className="eyebrow"><Leaf size={16} /> Our Promise</span>
           <h2>A mill, a family, a promise.</h2>
           <p>For three generations our family has done one thing well: pressed oil the slow way, in a wooden chekku that turns no faster than a bullock can walk. We never blend, never refine, never rush.</p>
-          <button className="primary" onClick={() => go('about')}>Our Story <ArrowRight size={18} /></button>
+          <button className="primary magnetic" onClick={() => go('about')}>Our Story <ArrowRight size={18} /></button>
         </div>
       </section>
       <ProcessTeaser go={go} />
@@ -425,38 +413,30 @@ function Home({ go, addToCart, setQuickView, setSelectedProduct }) {
   );
 }
 
-function ProcessTeaser({ go }) {
+function ValueIcon({ type }) {
   return (
-    <section className="process-story">
-      <div className="chekku-visual" aria-label="Rotating wooden chekku illustration">
-        <div className="chekku-wheel"><Leaf size={42} /></div>
-      </div>
-      <div className="process-steps">
-        {['Source', 'Cold-press', 'Settle', 'Bottle'].map((step, index) => (
-          <article key={step}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <h3>{step}</h3>
-            <p>{process[index + 1]?.[1] || 'Packed fresh and sent from Karur to your kitchen.'}</p>
-          </article>
-        ))}
-        <button className="primary" onClick={() => go('process')}>See the Process <ArrowRight size={18} /></button>
-      </div>
-    </section>
+    <svg className="value-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" strokeWidth="2" />
+      {type === 'press' && <><path d="M20 38c11-2 18-9 22-21 6 10 4 23-7 29-7 3-13 0-15-8Z" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M25 42c4-8 9-13 17-17" stroke="#f4b323" strokeWidth="2" /></>}
+      {type === 'pure' && <><path d="M32 15c8 10 12 17 12 24a12 12 0 0 1-24 0c0-7 4-14 12-24Z" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M24 40h16" stroke="#f4b323" strokeWidth="2" /></>}
+      {type === 'family' && <><path d="M18 41c2-8 8-13 14-13s12 5 14 13" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="32" cy="22" r="7" fill="none" stroke="#f4b323" strokeWidth="2" /></>}
+      {type === 'karur' && <><path d="M18 18h28v28H18z" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M32 20c5 5 7 8 7 12a7 7 0 0 1-14 0c0-4 2-7 7-12Z" fill="none" stroke="#f4b323" strokeWidth="2" /></>}
+    </svg>
   );
 }
 
 function TrustBand() {
   const items = [
-    [ShieldCheck, '100% Pure & Cold Pressed', 'No shortcuts in extraction'],
-    [Factory, 'Direct from Manufacturer', 'Better freshness and pricing'],
-    [Award, 'Quality Assurance', 'Batch handled with care'],
-    [Truck, 'Retail & Bulk Delivery', 'Homes, shops and hotels']
+    ['press', 'Cold-pressed weekly', 'WHY KANI CHEKKU'],
+    ['pure', 'Zero adulterants', 'WHY KANI CHEKKU'],
+    ['family', 'Family-run batches', 'WHY KANI CHEKKU'],
+    ['karur', 'Direct from Karur', 'WHY KANI CHEKKU']
   ];
   return (
     <section className="trust-band">
-      {items.map(([Icon, title, copy]) => (
+      {items.map(([type, title, copy]) => (
         <div className="trust-item" key={title}>
-          <Icon size={25} />
+          <ValueIcon type={type} />
           <div><strong>{title}</strong><span>{copy}</span></div>
         </div>
       ))}
@@ -474,94 +454,63 @@ function SectionTitle({ kicker, title, action, onAction }) {
 }
 
 function ProductCard({ product, addToCart, setQuickView, onDetails }) {
+  const variant = primaryVariant(product);
   return (
     <article className="product-card">
       <button className="product-image" onClick={onDetails} aria-label={`View ${product.name}`}>
-        <img src={product.hero} alt={product.name} />
-        <span>{product.badge}</span>
+        <img src={product.images[0]} alt={`${product.name} product illustration`} />
+        <span>{product.badges[0]}</span>
+        <em>View</em>
       </button>
       <div className="product-body">
-        <small>{product.category} / {product.size}</small>
+        <small>{product.subBrand} / {variant.size}</small>
         <h3>{product.name}</h3>
-        <p>{product.desc}</p>
+        <span className="tamil-product">{product.tamil}</span>
+        <p>{product.shortDesc}</p>
         <div className="price-row">
-          <strong>₹{product.price}</strong>
+          <strong>{formatInr(variant.price)}</strong>
           <button className="icon-button" onClick={() => setQuickView(product)} aria-label={`Quick view ${product.name}`}><Search size={18} /></button>
         </div>
-        <button className="primary full" onClick={() => addToCart(product)}>Add to Cart</button>
+        <button className="primary full magnetic" onClick={() => addToCart(product, variant)}>Add {variant.size}</button>
       </div>
     </article>
   );
 }
 
-function About() {
-  return (
-    <>
-      <PageHero title="Rooted in Karur. Made for honest kitchens." copy="Sai Agro Foods brings agricultural sourcing, edible oil manufacturing and practical quality systems together at Pasupathipalayam, Karur." image="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=90" />
-      <section className="split-section">
-        <div>
-          <span className="kicker">Our Story</span>
-          <h2>From local produce to trusted everyday oil.</h2>
-          <p>Our work begins with a simple standard: oils should taste fresh, smell natural and feel trustworthy. Sai Agro Foods focuses on cold pressed edible oils, peanuts and manufacturer-direct supply for households, retailers and food-service buyers.</p>
-          <p>Karur’s agricultural trading culture shapes how we work: clear relationships, practical quality checks and consistency that buyers can rely on.</p>
-        </div>
-        <div className="mission-grid">
-          <div><Heart size={24} /><strong>Vision</strong><span>To make pure traditional oils accessible to modern homes and businesses.</span></div>
-          <div><Zap size={24} /><strong>Mission</strong><span>Deliver fresh, traceable and fairly priced products with responsive service.</span></div>
-        </div>
-      </section>
-      <section className="section soft">
-        <SectionTitle kicker="Manufacturing Process" title="A careful path from seed to sealed bottle" />
-        <div className="process-grid">
-          {process.map(([title, copy, Icon], index) => (
-            <div className="process-card" key={title}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <Icon size={28} />
-              <h3>{title}</h3>
-              <p>{copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
 function Products(props) {
-  const categories = ['All', 'Edible Oils', 'Peanuts'];
-  const types = ['Groundnut', 'Sesame', 'Coconut', 'Sunflower', 'Raw', 'Roasted', 'Jaggery', 'Masala'];
+  const categories = [
+    ['All', 'All'],
+    ['edible-oils', 'Cooking Oils'],
+    ['wellness-oils', 'Wellness Oils'],
+    ['pooja-essentials', 'Pooja Essentials'],
+    ['snacks', 'Snacks'],
+    ['Bulk / Trade', 'Bulk / Trade']
+  ];
+  const subBrands = ['All', 'Kani Chekku', 'Kani Brand', 'Sai', 'Sai Gold'];
+  const packSizes = ['All', '200 ml', '500 ml', '1 Litre', '5 Litre', '15 kg Tin', '1 kg Pouch', 'Box'];
   return (
     <>
-      <PageHero title="Shop pure oils and premium peanuts" copy="Filter retail packs and bulk-ready products from Sai Agro Foods." image="https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?auto=format&fit=crop&w=1800&q=90" compact />
+      <PageHero title="Shop pure oils and premium peanuts" copy="Filter cold-pressed oils, pooja essentials, snacks, and trade packs from Sai Agro Foods." image="/images/products/kani-chekku-groundnut-oil/05-context.svg" compact />
       <section className="shop-layout">
         <aside className="filters">
           <label><Search size={17} /> Search</label>
-          <input value={props.query} onChange={(event) => props.setQuery(event.target.value)} placeholder="Groundnut, sesame..." />
+          <input value={props.query} onChange={(event) => props.setQuery(event.target.value)} placeholder="Groundnut, lamp oil..." />
           <label><Filter size={17} /> Category</label>
-          <div className="segmented">
-            {categories.map((item) => <button key={item} className={props.category === item ? 'active' : ''} onClick={() => props.setCategory(item)}>{item}</button>)}
-          </div>
-          <label>Type</label>
-          <div className="chip-list">
-            {types.map((item) => <span key={item}>{item}</span>)}
-          </div>
+          <div className="segmented">{categories.map(([value, label]) => <button key={value} className={props.category === value ? 'active' : ''} onClick={() => props.setCategory(value)}>{label}</button>)}</div>
+          <label>Sub-brand</label>
+          <div className="chip-list selectable">{subBrands.map((item) => <button key={item} className={props.subBrand === item ? 'active' : ''} onClick={() => props.setSubBrand(item)}>{item}</button>)}</div>
+          <label>Pack size</label>
+          <div className="chip-list selectable">{packSizes.map((item) => <button key={item} className={props.packSize === item ? 'active' : ''} onClick={() => props.setPackSize(item)}>{item}</button>)}</div>
           <label>Sort</label>
           <select value={props.sort} onChange={(event) => props.setSort(event.target.value)}>
             <option value="featured">Featured</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
+            <option value="low">Price ↑</option>
+            <option value="high">Price ↓</option>
+            <option value="newest">Newest</option>
           </select>
         </aside>
         <div className="product-grid">
-          {props.filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              addToCart={props.addToCart}
-              setQuickView={props.setQuickView}
-              onDetails={() => props.setSelectedProduct(product)}
-            />
-          ))}
+          {props.filteredProducts.map((product) => <ProductCard key={product.id} product={product} addToCart={props.addToCart} setQuickView={props.setQuickView} onDetails={() => props.setSelectedProduct(product)} />)}
           {props.filteredProducts.length === 0 && <div className="empty product-empty"><PackageCheck size={36} /><p>No matches yet. Try fewer filters.</p></div>}
         </div>
       </section>
@@ -569,40 +518,49 @@ function Products(props) {
   );
 }
 
-function Details({ product, addToCart, go, setSelectedProduct }) {
+function Details({ products, product, addToCart, go, setSelectedProduct }) {
+  const defaultVariant = primaryVariant(product);
+  const [selectedSku, setSelectedSku] = useState(defaultVariant.sku);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState('Description');
+  const selectedVariant = product.variants.find((variant) => variant.sku === selectedSku) || defaultVariant;
   const related = products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 3);
+  const today = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+
+  useEffect(() => setSelectedSku(defaultVariant.sku), [defaultVariant.sku, product.slug]);
+
   return (
     <>
       <section className="details">
-        <div className="zoom-image"><img src={product.hero} alt={product.name} /></div>
+        <div className="zoom-image"><img src={product.images[0]} alt={`${product.name} hero pack`} /></div>
         <div className="details-copy">
-          <span className="badge">{product.badge}</span>
+          <span className="badge">{product.badges.join(' · ')}</span>
           <h1>{product.name}</h1>
-          <p>{product.desc}</p>
+          <span className="tamil-line pdp">{product.tamil}</span>
+          <p>{product.tagline}</p>
           <div className="stars"><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /> <span>4.9 buyer rating</span></div>
-          <strong className="detail-price">₹{product.price} <small>/ {product.size}</small></strong>
-          <PurityMeter value={100} />
-          <h3>Benefits</h3>
-          <ul className="check-list">{product.benefits.map((item) => <li key={item}><CheckCircle2 size={18} /> {item}</li>)}</ul>
-          <h3>Usage Suggestions</h3>
-          <p>{product.usage}</p>
+          <strong className="detail-price">{formatInr(selectedVariant.price)} <small>/ {selectedVariant.size}</small></strong>
+          <VariantSelector product={product} selectedSku={selectedSku} setSelectedSku={setSelectedSku} />
+          <PurityMeter value={product.category === 'edible-oils' || product.category === 'wellness-oils' ? 100 : 96} />
+          <div className="pour-count">Pressed batch #{product.batchNo} · 14-hour settling</div>
+          <h3>About this product</h3>
+          <p>{product.shortDesc}</p>
           <div className="quantity">
             <button className="icon-button" onClick={() => setQty(Math.max(1, qty - 1))}><Minus size={18} /></button>
             <span>{qty}</span>
             <button className="icon-button" onClick={() => setQty(qty + 1)}><Plus size={18} /></button>
           </div>
           <div className="hero-actions">
-            <button className="primary" onClick={() => addToCart(product, qty)}>Add to Cart</button>
-            <button className="secondary" onClick={() => { addToCart(product, qty); go('cart'); }}>Buy Now</button>
-            <a className="whatsapp-button" href={`https://wa.me/919944534337?text=I%20want%20to%20order%20${encodeURIComponent(product.name)}%20x%20${qty}`} target="_blank" rel="noreferrer">Buy on WhatsApp</a>
+            <button className="primary magnetic" disabled={!selectedVariant.stock} onClick={() => addToCart(product, selectedVariant, qty)}>Add to Cart</button>
+            <button className="secondary" onClick={() => { addToCart(product, selectedVariant, qty); go('cart'); }}>Buy Now</button>
+            <a className="whatsapp-button" href={`https://wa.me/919944534337?text=I%20want%20to%20order%20${encodeURIComponent(product.name)}%20${encodeURIComponent(selectedVariant.size)}%20x%20${qty}`} target="_blank" rel="noreferrer">Buy on WhatsApp</a>
           </div>
-          <div className="trust-strip">✓ Cold-pressed weekly · ✓ FSSAI ready · ✓ Ships in 48h · ✓ COD in Tamil Nadu</div>
+          <ProvenanceCard today={today} />
+          <div className="trust-strip">Cold-pressed weekly · FSSAI ready · Ships in 48h · COD in Tamil Nadu</div>
           <div className="tabs">
-            {['Description', 'How made', 'Nutrition', 'Reviews'].map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{item}</button>)}
+            {['Description', 'How made', 'Nutrition', 'Shelf life'].map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{item}</button>)}
           </div>
-          <p className="tab-panel">{tab === 'Description' ? product.desc : tab === 'How made' ? 'Sorted, cleaned, slow pressed, naturally settled and packed with batch care at Sai Agro Foods.' : tab === 'Nutrition' ? 'Naturally rich cooking oil or peanut nutrition. Final lab values can be added before launch.' : 'Customers praise the fresh aroma, clean taste and reliable packing.'}</p>
+          <p className="tab-panel">{tab === 'Description' ? product.longDesc : tab === 'How made' ? 'Sorted, cleaned, slow pressed, naturally settled, filtered through cloth, and packed with batch care at Sai Agro Foods.' : tab === 'Nutrition' ? (product.nutrition || 'Nutrition details are not required for this product category.') : product.shelfLife}</p>
         </div>
       </section>
       <section className="section">
@@ -615,6 +573,33 @@ function Details({ product, addToCart, go, setSelectedProduct }) {
   );
 }
 
+function VariantSelector({ product, selectedSku, setSelectedSku }) {
+  return (
+    <div className="variant-selector" aria-label="Choose pack size">
+      {product.variants.map((variant) => (
+        <button key={variant.sku} className={selectedSku === variant.sku ? 'active' : ''} onClick={() => setSelectedSku(variant.sku)}>
+          <strong>{variant.size}</strong>
+          <span>{variant.sku} · {formatInr(variant.price)}</span>
+          {variant.tradePack && <em>Trade</em>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ProvenanceCard({ today }) {
+  return (
+    <div className="provenance-card">
+      <svg viewBox="0 0 220 120" aria-hidden="true">
+        <path d="M36 74c20-38 71-55 107-35 28 15 38 43 27 61-19 31-104 24-134-26Z" fill="rgba(47,125,60,.12)" stroke="currentColor" />
+        <circle cx="105" cy="66" r="6" fill="currentColor" />
+        <path d="M105 66c7 6 11 11 11 17" stroke="currentColor" strokeWidth="2" fill="none" />
+      </svg>
+      <div><strong>Pressed in Pasupathipalayam, Karur</strong><span>Mon, {today}</span></div>
+    </div>
+  );
+}
+
 function PurityMeter({ value }) {
   const circumference = 2 * Math.PI * 42;
   const offset = circumference - (value / 100) * circumference;
@@ -624,24 +609,24 @@ function PurityMeter({ value }) {
         <circle cx="50" cy="50" r="42" />
         <circle className="meter-progress" cx="50" cy="50" r="42" style={{ strokeDasharray: circumference, strokeDashoffset: offset }} />
       </svg>
-      <div><strong>{value}%</strong><span>Cold-press purity</span></div>
+      <div><strong>{value}%</strong><span>Purity meter</span></div>
     </div>
   );
 }
 
-function Cart({ cart, subtotal, updateQty, go }) {
-  const shipping = subtotal > 999 || subtotal === 0 ? 0 : 80;
+function Cart({ cart, subtotal, updateQty, go, site }) {
+  const shipping = subtotal > site.freeShippingThreshold || subtotal === 0 ? 0 : site.shippingRate;
   const total = subtotal + shipping;
   return (
     <section className="cart-page">
       <div className="cart-items">
         <span className="kicker">Cart & Checkout</span>
         <h1>Review your order</h1>
-        {cart.length === 0 && <div className="empty"><ShoppingBag size={34} /><p>Your basket is empty. The harvest is waiting.</p><button className="primary" onClick={() => go('products')}>Browse the Harvest</button></div>}
+        {cart.length === 0 && <div className="empty"><OilBasketIcon /><p>Your basket is empty. The press is running →</p><button className="primary" onClick={() => go('products')}>Browse the Press</button></div>}
         {cart.map((item) => (
           <div className="cart-row" key={item.id}>
-            <img src={item.hero} alt={item.name} />
-            <div><strong>{item.name}</strong><span>{item.size}</span><b>₹{item.price * item.qty}</b></div>
+            <img src={item.image} alt={item.name} />
+            <div><strong>{item.name}</strong><span>{item.size} · {item.sku}</span><b>{formatInr(item.price * item.qty)}</b></div>
             <div className="quantity compact">
               <button className="icon-button" onClick={() => updateQty(item.id, -1)}><Minus size={16} /></button>
               <span>{item.qty}</span>
@@ -652,9 +637,9 @@ function Cart({ cart, subtotal, updateQty, go }) {
       </div>
       <aside className="checkout">
         <h2>Order Summary</h2>
-        <div className="summary-line"><span>Subtotal</span><b>₹{subtotal}</b></div>
-        <div className="summary-line"><span>Shipping</span><b>{shipping ? `₹${shipping}` : 'Free'}</b></div>
-        <div className="summary-line total"><span>Total</span><b>₹{total}</b></div>
+        <div className="summary-line"><span>Subtotal</span><b>{formatInr(subtotal)}</b></div>
+        <div className="summary-line"><span>Shipping</span><b>{shipping ? formatInr(shipping) : 'Free'}</b></div>
+        <div className="summary-line total"><span>Total</span><b>{formatInr(total)}</b></div>
         <button className="primary full" onClick={() => go('checkout')}>Proceed to Checkout</button>
         <a className="whatsapp-button full" href="https://wa.me/919944534337?text=I%20want%20to%20place%20an%20order%20with%20Sai%20Agro%20Foods" target="_blank" rel="noreferrer">Order on WhatsApp</a>
       </aside>
@@ -662,37 +647,72 @@ function Cart({ cart, subtotal, updateQty, go }) {
   );
 }
 
-function CheckoutPage({ subtotal, go }) {
-  const shipping = subtotal > 999 || subtotal === 0 ? 0 : 80;
+function CheckoutPage({ cart, subtotal, go, site, captureOrder }) {
+  const shipping = subtotal > site.freeShippingThreshold || subtotal === 0 ? 0 : site.shippingRate;
   const total = subtotal + shipping;
   const [done, setDone] = useState(false);
+  const [customer, setCustomer] = useState({ name: '', phone: '', email: '', address: '', city: '', state: 'Tamil Nadu', pincode: '', notes: '' });
+  function update(field, value) {
+    setCustomer((current) => ({ ...current, [field]: value }));
+  }
   return (
     <section className="cart-page">
-    <form className="checkout checkout-wide" onSubmit={(event) => { event.preventDefault(); setDone(true); setTimeout(() => go('thankyou'), 500); }}>
-      <h2>Secure Checkout</h2>
-      <input placeholder="Full name" />
-      <input placeholder="Phone number" />
-      <input placeholder="Email address" />
-      <input placeholder="Street address" />
-      <input placeholder="City" />
-      <input defaultValue="Tamil Nadu" placeholder="State" />
-      <input placeholder="Pincode" />
-      <textarea placeholder="Delivery address" rows="4" />
-      <select defaultValue="upi">
-        <option value="upi">UPI on delivery</option>
-        <option value="cod">Cash on Delivery</option>
-        <option value="wa">WhatsApp confirmation</option>
-      </select>
-      <textarea placeholder="Order notes" rows="3" />
-      <button className="primary full">Place Secure Order</button>
-      {done && <p className="success">Order request captured. Redirecting to thank you.</p>}
-    </form>
-    <aside className="checkout">
-      <h2>Summary</h2>
-      <div className="summary-line"><span>Subtotal</span><b>₹{subtotal}</b></div>
-      <div className="summary-line"><span>Shipping</span><b>{shipping ? `₹${shipping}` : 'Free'}</b></div>
-      <div className="summary-line total"><span>Total</span><b>₹{total}</b></div>
-    </aside>
+      <form className="checkout checkout-wide" onSubmit={(event) => { event.preventDefault(); captureOrder(customer); setDone(true); setTimeout(() => go('thankyou'), 500); }}>
+        <h2>Secure Checkout</h2>
+        <input required placeholder="Full name" value={customer.name} onChange={(event) => update('name', event.target.value)} />
+        <input required placeholder="Phone number" value={customer.phone} onChange={(event) => update('phone', event.target.value)} />
+        <input type="email" placeholder="Email address" value={customer.email} onChange={(event) => update('email', event.target.value)} />
+        <input required placeholder="Street address" value={customer.address} onChange={(event) => update('address', event.target.value)} />
+        <input required placeholder="City" value={customer.city} onChange={(event) => update('city', event.target.value)} />
+        <input value={customer.state} placeholder="State" onChange={(event) => update('state', event.target.value)} />
+        <input required placeholder="Pincode" value={customer.pincode} onChange={(event) => update('pincode', event.target.value)} />
+        <select defaultValue="cod"><option value="upi">UPI on delivery</option><option value="cod">Cash on Delivery</option><option value="wa">WhatsApp confirmation</option></select>
+        <textarea placeholder="Order notes" rows="3" value={customer.notes} onChange={(event) => update('notes', event.target.value)} />
+        <button className="primary full" disabled={cart.length === 0}>Place Secure Order</button>
+        {done && <p className="success">Order request captured. Redirecting to thank you.</p>}
+      </form>
+      <aside className="checkout why-buy">
+        <h2>Summary</h2>
+        <div className="summary-line"><span>Subtotal</span><b>{formatInr(subtotal)}</b></div>
+        <div className="summary-line"><span>Shipping</span><b>{shipping ? formatInr(shipping) : 'Free'}</b></div>
+        <div className="summary-line total"><span>Total</span><b>{formatInr(total)}</b></div>
+        {['Pressed weekly, never stocked', 'We ship in 48 hours', `COD across Tamil Nadu - free above ${formatInr(site.freeShippingThreshold)}`].map((item) => <div className="mini-card" key={item}><CheckCircle2 size={18} /> {item}</div>)}
+      </aside>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <>
+      <PageHero title="Rooted in Karur. Made for honest kitchens." copy="Sai Agro Foods brings agricultural sourcing, edible oil manufacturing, and practical quality systems together at Pasupathipalayam, Karur." image="/images/products/kani-chekku-gingelly-oil/05-context.svg" />
+      <section className="split-section">
+        <div className="founder-note">
+          <span className="kicker">Our Story</span>
+          <h2>From local produce to trusted everyday oil.</h2>
+          <p>Our work begins with a simple standard: oils should taste fresh, smell natural, and feel trustworthy. Sai Agro Foods focuses on small-batch pressing, careful filtration, and direct relationships with kitchens that care about what goes into the kadai.</p>
+        </div>
+        <div className="mission-grid">
+          <div><Leaf size={26} /><strong>Vision</strong><span>Build a Karur brand known for purity, patience, and honest everyday food.</span></div>
+          <div><Heart size={26} /><strong>Mission</strong><span>Deliver fresh, traceable, fairly priced products with responsive service.</span></div>
+        </div>
+      </section>
+      <section className="section soft">
+        <SectionTitle kicker="Manufacturing Process" title="A careful path from seed to sealed bottle" />
+        <div className="process-grid">{process.map(([title, copy, Icon], index) => <div className="process-card" key={title}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={28} /><h3>{title}</h3><p>{copy}</p></div>)}</div>
+      </section>
+    </>
+  );
+}
+
+function ProcessTeaser({ go }) {
+  return (
+    <section className="process-story">
+      <div className="chekku-visual" aria-label="Rotating wooden chekku illustration"><div className="chekku-wheel"><Leaf size={42} /></div></div>
+      <div className="process-steps">
+        {['Source', 'Cold-press', 'Settle', 'Bottle'].map((step, index) => <article key={step}><span>{String(index + 1).padStart(2, '0')}</span><h3>{step}</h3><p>{process[index + 1]?.[1] || 'Packed fresh and sent from Karur to your kitchen.'}</p></article>)}
+        <button className="primary" onClick={() => go('process')}>See the Process <ArrowRight size={18} /></button>
+      </div>
     </section>
   );
 }
@@ -700,13 +720,11 @@ function CheckoutPage({ subtotal, go }) {
 function ProcessPage({ go }) {
   return (
     <>
-      <PageHero title="From seed to bottle in 14 hours" copy="Cleaning, sun-drying, mara chekku pressing, cloth filtration and careful bottling at Sai Agro Foods." image="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=90" compact />
+      <PageHero title="From seed to bottle in 14 hours" copy="Cleaning, sun-drying, mara chekku pressing, cloth filtration, and careful bottling at Sai Agro Foods." image="/images/products/kani-brand-coconut-oil/05-context.svg" compact />
       <section className="section">
         <SectionTitle kicker="Our Process" title="Why slow pressing still matters" />
-        <div className="process-grid">
-          {process.map(([title, copy, Icon], index) => <div className="process-card" key={title}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={28} /><h3>{title}</h3><p>{copy}</p></div>)}
-        </div>
-        <table className="comparison"><thead><tr><th>Method</th><th>Heat</th><th>Aroma</th><th>Everyday Trust</th></tr></thead><tbody><tr><td>Mara chekku</td><td>Low</td><td>Full</td><td>✓</td></tr><tr><td>Refined oil</td><td>High</td><td>Neutralised</td><td>Varies</td></tr><tr><td>Expeller pressed</td><td>Medium</td><td>Moderate</td><td>✓</td></tr></tbody></table>
+        <div className="process-grid">{process.map(([title, copy, Icon], index) => <div className="process-card" key={title}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={28} /><h3>{title}</h3><p>{copy}</p></div>)}</div>
+        <table className="comparison"><thead><tr><th>Method</th><th>Heat</th><th>Aroma</th><th>Everyday Trust</th></tr></thead><tbody><tr><td>Mara chekku</td><td>Low</td><td>Full</td><td>Yes</td></tr><tr><td>Refined oil</td><td>High</td><td>Neutralised</td><td>Varies</td></tr><tr><td>Expeller pressed</td><td>Medium</td><td>Moderate</td><td>Yes</td></tr></tbody></table>
         <button className="primary" onClick={() => go('products')}>Taste the Difference</button>
       </section>
     </>
@@ -714,64 +732,41 @@ function ProcessPage({ go }) {
 }
 
 function RecipesPage() {
-  const recipes = ['Karur-style groundnut chutney', 'Tamil sesame rice', 'Jaggery peanut chikki', 'Sundal with cold pressed oil', 'Vatha kuzhambu temper', 'Coconut oil hair mask'];
-  return (
-    <section className="section blog-page">
-      <SectionTitle kicker="Recipes & Uses" title="Cook the way Karur cooks" />
-      <div className="chip-list recipe-filters"><span>Groundnut Oil</span><span>Sesame Oil</span><span>Festival</span><span>Daily</span><span>Snack</span></div>
-      <div className="blog-grid">{recipes.map((title) => <article key={title}><span className="kicker">Recipe</span><h3>{title}</h3><p>Simple Tamil kitchen notes with ingredients, steps and the matching Sai Agro Foods product CTA.</p><button className="text-button">View recipe <ArrowRight size={16} /></button></article>)}</div>
-    </section>
-  );
+  const recipes = ['Karur-style groundnut chutney', 'Tamil sesame rice', 'Roasted peanut podi', 'Sundal with cold pressed oil', 'Vatha kuzhambu temper', 'Coconut oil hair mask'];
+  return <section className="section blog-page"><SectionTitle kicker="Recipes & Uses" title="Cook the way Karur cooks" /><div className="chip-list recipe-filters"><span>Groundnut Oil</span><span>Gingelly Oil</span><span>Festival</span><span>Snack</span></div><div className="blog-grid">{recipes.map((title) => <article key={title}><span className="kicker">Recipe</span><h3>{title}</h3><p>Simple Tamil kitchen notes with ingredients, steps, and the matching Sai Agro Foods product CTA.</p><button className="text-button">View recipe <ArrowRight size={16} /></button></article>)}</div></section>;
 }
 
 function FAQPage() {
   const [q, setQ] = useState('');
-  const faqs = ['Do you ship outside Tamil Nadu?', 'Are your oils cold pressed weekly?', 'Do you support wholesale orders?', 'What is the shelf life?', 'Can I pay by COD?', 'How should I store sesame oil?', 'Do you accept returns?', 'Can restaurants get trade pricing?'];
+  const faqs = ['Do you ship outside Tamil Nadu?', 'Are your oils cold pressed weekly?', 'Do you support wholesale orders?', 'What is the shelf life?', 'Can I pay by COD?', 'How should I store gingelly oil?', 'Do you accept returns?', 'Can restaurants get trade pricing?'];
   const visible = faqs.filter((item) => item.toLowerCase().includes(q.toLowerCase()));
-  return (
-    <section className="section blog-page">
-      <SectionTitle kicker="FAQ" title="Questions, answered." />
-      <input className="faq-search" value={q} onChange={(event) => setQ(event.target.value)} placeholder="Search ordering, products, shipping..." />
-      <div className="faq">{visible.map((item) => <details key={item} open><summary>{item}</summary><p>Yes. Sai Agro Foods handles this with clear communication; final policy numbers and contact details can be filled before launch.</p></details>)}</div>
-    </section>
-  );
+  return <section className="section blog-page"><SectionTitle kicker="FAQ" title="Questions, answered." /><input className="faq-search" value={q} onChange={(event) => setQ(event.target.value)} placeholder="Search ordering, products, shipping..." /><div className="faq">{visible.map((item) => <details key={item} open><summary>{item}</summary><p>Yes. Sai Agro Foods handles this with clear communication; final policy numbers and contact details can be filled before launch.</p></details>)}</div></section>;
 }
 
 function ThankYou({ go }) {
-  return (
-    <section className="thank-you">
-      <CheckCircle2 size={72} />
-      <h1>Your basket is on its way</h1>
-      <p>Order request SAF-{Date.now().toString().slice(-6)} has been captured. Our team will confirm availability and dispatch details on WhatsApp.</p>
-      <button className="primary" onClick={() => go('products')}>Continue Shopping</button>
-    </section>
-  );
+  return <section className="thank-you"><CheckCircle2 size={72} /><h1>Your basket is on its way</h1><p>Order request captured. Our team will confirm availability and dispatch details on WhatsApp.</p><button className="primary" onClick={() => go('products')}>Continue Shopping</button></section>;
 }
 
-function Contact() {
+function Contact({ site }) {
   const [sent, setSent] = useState(false);
   return (
     <>
-      <PageHero title="Visit or contact Sai Agro Foods" copy="Pasupathipalayam, Karur, Tamil Nadu, India." image="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=1800&q=90" compact />
+      <PageHero title="Visit or contact Sai Agro Foods" copy={site.footer.address} image="/images/products/sai-roasted-peanuts/05-context.svg" compact />
       <section className="contact-grid">
         <div className="contact-card">
           <h2>Manufacturer Direct Enquiries</h2>
           <p><Heart size={18} /> Mr. Saravanakumar Selvaraj</p>
-          <p><MapPin size={18} /> Pasupathipalayam, Karur, Tamil Nadu, India</p>
-          <p><Phone size={18} /> +91 99445 34337</p>
-          <p><Mail size={18} /> sales@saiagrofoods.in</p>
-          <p><Truck size={18} /> Mill hours: Mon-Sat, 8 AM-6 PM</p>
+          <p><MapPin size={18} /> {site.footer.address}</p>
+          <p><Phone size={18} /> {site.footer.phone}</p>
+          <p><Mail size={18} /> {site.footer.email}</p>
+          <p><Truck size={18} /> Mill hours: {site.footer.hours}</p>
           <iframe title="Sai Agro Foods map" src="https://www.google.com/maps?q=Pasupathipalayam%20Karur%20Tamil%20Nadu&output=embed" loading="lazy" />
         </div>
         <form className="contact-form" onSubmit={(event) => { event.preventDefault(); setSent(true); }}>
           <h2>Send a Message</h2>
-          <input required placeholder="Name" />
-          <input required type="email" placeholder="Email" />
-          <input required placeholder="Phone" pattern="[0-9+\s-]{8,}" />
+          <input required placeholder="Name" /><input required type="email" placeholder="Email" /><input required placeholder="Phone" pattern="[0-9+\s-]{8,}" />
           <select defaultValue="retail"><option value="retail">Retail purchase</option><option value="bulk">Bulk enquiry</option><option value="wholesale">Wholesale</option><option value="other">Other</option></select>
-          <textarea required rows="5" placeholder="Tell us what you need" />
-          <button className="primary full">Submit Enquiry</button>
-          {sent && <p className="success">Thanks. Your enquiry is ready for backend email integration.</p>}
+          <textarea required rows="5" placeholder="Tell us what you need" /><button className="primary full">Submit Enquiry</button>{sent && <p className="success">Thanks. Your enquiry is ready for backend email integration.</p>}
         </form>
       </section>
     </>
@@ -779,87 +774,261 @@ function Contact() {
 }
 
 function Blog() {
-  const posts = [
-    ['Why cold pressed groundnut oil tastes different', 'Slow extraction protects aroma and creates a fuller cooking flavour.'],
-    ['Sesame oil in traditional Tamil kitchens', 'A practical guide to gingelly oil in cooking, pickles and wellness routines.'],
-    ['How to choose peanuts for roasting and chutney', 'Look for uniform size, clean sorting and a naturally sweet finish.']
-  ];
-  return (
-    <section className="section blog-page">
-      <SectionTitle kicker="Journal" title="Helpful buying notes for healthier kitchens" />
-      <div className="blog-grid">
-        {posts.map(([title, copy]) => <article key={title}><span className="kicker">Health Benefits</span><h3>{title}</h3><p>{copy}</p><button className="text-button">Read note <ArrowRight size={16} /></button></article>)}
-      </div>
-    </section>
-  );
+  const posts = [['Why cold pressed groundnut oil tastes different', 'Slow extraction protects aroma and creates a fuller cooking flavour.'], ['Gingelly oil in traditional Tamil kitchens', 'A practical guide to nallennai in cooking, pickles, and wellness routines.'], ['How to choose peanuts for roasting and chutney', 'Look for uniform size, clean sorting, and a naturally sweet finish.']];
+  return <section className="section blog-page"><SectionTitle kicker="Journal" title="Helpful buying notes for healthier kitchens" /><div className="blog-grid">{posts.map(([title, copy]) => <article key={title}><span className="kicker">Health Benefits</span><h3>{title}</h3><p>{copy}</p><button className="text-button">Read note <ArrowRight size={16} /></button></article>)}</div></section>;
 }
 
 function PageHero({ title, copy, image, compact }) {
-  return (
-    <section className={`page-hero ${compact ? 'compact' : ''}`} style={{ backgroundImage: `linear-gradient(90deg, rgba(39,28,11,.8), rgba(39,28,11,.34)), url(${image})` }}>
-      <div><span className="eyebrow"><Leaf size={16} /> Sai Agro Foods</span><h1>{title}</h1><p>{copy}</p></div>
-    </section>
-  );
+  return <section className={`page-hero ${compact ? 'compact' : ''}`} style={{ backgroundImage: `linear-gradient(90deg, rgba(39,28,11,.8), rgba(39,28,11,.34)), url(${image})` }}><div><span className="eyebrow"><Leaf size={16} /> Sai Agro Foods</span><h1>{title}</h1><p>{copy}</p></div></section>;
 }
 
 function Testimonials() {
-  return (
-    <section className="section testimonials">
-      <SectionTitle kicker="Customer Reviews" title="Trusted by homes, shops and food-service buyers" />
-      <div className="testimonial-grid">
-        {testimonials.map(([quote, name, role]) => (
-          <article key={name}>
-            <div className="stars"><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /></div>
-            <p>"{quote}"</p><strong>{name}</strong><span>{role}</span>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+  return <section className="section testimonials"><SectionTitle kicker="Customer Reviews" title="Trusted by homes, shops, and food-service buyers" /><div className="testimonial-grid">{testimonials.map(([quote, name, role]) => <article key={name}><div className="stars"><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /><Star fill="currentColor" size={17} /></div><p>"{quote}"</p><strong>{name}</strong><span>{role}</span></article>)}</div></section>;
 }
 
 function Newsletter() {
-  return (
-    <section className="newsletter">
-      <div><span className="kicker">Fresh Batch Alerts</span><h2>Get product updates, bulk offers and seasonal peanut notes.</h2></div>
-      <form onSubmit={(event) => event.preventDefault()}><input type="email" placeholder="Email address" /><button className="primary">Subscribe</button></form>
-    </section>
-  );
+  return <section className="newsletter"><div><span className="kicker">Fresh Batch Alerts</span><h2>Get product updates, trade offers, and seasonal peanut notes.</h2></div><form onSubmit={(event) => event.preventDefault()}><input type="email" placeholder="Email address" /><button className="primary">Subscribe</button></form></section>;
+}
+
+function SprigDivider() {
+  return <div className="sprig-divider" aria-hidden="true"><svg viewBox="0 0 160 32"><path d="M12 18c38-18 70-18 136 0" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M54 13c-8-8-18-8-27-3 7 8 17 8 27 3Zm40 0c8-8 18-8 27-3-7 8-17 8-27 3Z" fill="currentColor" /></svg></div>;
 }
 
 function QuickView({ product, close, addToCart }) {
+  const variant = primaryVariant(product);
   return (
     <div className="modal-backdrop" onClick={close}>
       <article className="quick-modal" onClick={(event) => event.stopPropagation()}>
         <button className="icon-button close" onClick={close}><X size={20} /></button>
-        <img src={product.hero} alt={product.name} />
+        <img src={product.images[1] || product.images[0]} alt={product.name} />
         <div>
-          <span className="badge">{product.badge}</span>
+          <span className="badge">{product.badges.join(' · ')}</span>
           <h2>{product.name}</h2>
-          <p>{product.desc}</p>
-          <strong className="detail-price">₹{product.price}</strong>
-          <ul className="check-list">{product.benefits.map((item) => <li key={item}><CheckCircle2 size={17} /> {item}</li>)}</ul>
-          <button className="primary full" onClick={() => { addToCart(product); close(); }}>Add to Cart</button>
+          <p>{product.shortDesc}</p>
+          <strong className="detail-price">{formatInr(variant.price)} <small>/ {variant.size}</small></strong>
+          <ul className="check-list"><li><CheckCircle2 size={17} /> {product.subBrand}</li><li><CheckCircle2 size={17} /> {product.shelfLife}</li><li><CheckCircle2 size={17} /> {variant.sku}</li></ul>
+          <button className="primary full" onClick={() => { addToCart(product, variant); close(); }}>Add to Cart</button>
         </div>
       </article>
     </div>
   );
 }
 
-function Footer({ go }) {
+function Footer({ go, site }) {
   return (
     <footer>
+      <div className="footer-trust"><span>FSSAI No. ___</span><span>GSTIN ___</span><span>100% family-run since [year].</span></div>
+      <div className="trust-logos"><span>FSSAI</span><span>AGMARK</span><span>Made in India</span><span>Family Owned</span></div>
       <div>
         <button className="brand footer-brand" onClick={() => go('home')}><span className="logo"><Leaf size={24} /><span /></span><span><strong>Sai Agro Foods</strong><small>Pressed slow. Poured pure.</small></span></button>
         <p>Pure cold pressed oils and agricultural products from Pasupathipalayam, Karur.</p>
-        <p>FSSAI: License number placeholder</p>
       </div>
-      <div><strong>Shop</strong><button onClick={() => go('products')}>Edible Oils</button><button onClick={() => go('products')}>Peanuts</button><button onClick={() => go('cart')}>Cart</button></div>
+      <div><strong>Shop</strong><button onClick={() => go('products')}>Cooking Oils</button><button onClick={() => go('products')}>Pooja Essentials</button><button onClick={() => go('cart')}>Cart</button></div>
       <div><strong>Company</strong><button onClick={() => go('about')}>About</button><button onClick={() => go('process')}>Process</button><button onClick={() => go('recipes')}>Recipes</button><button onClick={() => go('faq')}>FAQ</button><button onClick={() => go('contact')}>Contact</button></div>
-      <div><strong>Contact</strong><span>Mr. Saravanakumar Selvaraj</span><span>Pasupathipalayam, Karur</span><span>+91 99445 34337</span><span>sales@saiagrofoods.in</span></div>
+      <div><strong>Contact</strong><span>Mr. Saravanakumar Selvaraj</span><span>{site.footer.address}</span><span>{site.footer.phone}</span><span>{site.footer.email}</span></div>
       <div className="developer-credit">Website & App Developed and Maintained by DG InfoTech, India</div>
     </footer>
   );
+}
+
+function AdminApp({ products, saveProducts, site, setSite, audit, log, orders, setOrders, adminPage, setAdminPage, go }) {
+  const [session, setSession] = useStoredState(storage.session, null);
+  if (!session) return <AdminLogin setSession={setSession} />;
+  return (
+    <section className="admin-shell">
+      <aside className="admin-sidebar">
+        <button className="brand admin-brand" onClick={() => setAdminPage('dashboard')}><span className="logo"><Leaf size={22} /><span /></span><span><strong>Sai Admin</strong><small>{session.email}</small></span></button>
+        {['dashboard', 'products', 'orders', 'site', 'settings'].map((item) => <button key={item} className={adminPage === item ? 'active' : ''} onClick={() => setAdminPage(item)}>{item[0].toUpperCase() + item.slice(1)}</button>)}
+        <button onClick={() => go('home')}>View site</button>
+        <button onClick={() => setSession(null)}>Logout</button>
+      </aside>
+      <div className="admin-main">
+        {adminPage === 'dashboard' && <AdminDashboard products={products} audit={audit} setAdminPage={setAdminPage} />}
+        {adminPage === 'products' && <AdminProducts products={products} saveProducts={saveProducts} />}
+        {adminPage === 'orders' && <AdminOrders orders={orders} setOrders={setOrders} log={log} />}
+        {adminPage === 'site' && <AdminSite site={site} setSite={setSite} log={log} />}
+        {adminPage === 'settings' && <AdminSettings products={products} orders={orders} site={site} log={log} />}
+      </div>
+    </section>
+  );
+}
+
+function AdminLogin({ setSession }) {
+  const [email, setEmail] = useState(ADMIN_EMAIL);
+  const [password, setPassword] = useState('');
+  const [attempts, setAttempts] = useState(0);
+  const [error, setError] = useState('');
+  function submit(event) {
+    event.preventDefault();
+    if (attempts >= 3) {
+      setError('Too many attempts. Refresh the page to try again.');
+      return;
+    }
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      setSession({ email, at: new Date().toISOString() });
+      return;
+    }
+    setAttempts((value) => value + 1);
+    setError('Invalid admin email or password.');
+  }
+  return (
+    <section className="admin-login">
+      <form onSubmit={submit}>
+        <span className="kicker">Sai Agro Foods Admin</span>
+        <h1>Owner login</h1>
+        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Admin email" />
+        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Password" />
+        <button className="primary full">Login</button>
+        <p className="admin-hint">Demo credentials: admin@saiagrofoods.com / admin123</p>
+        {error && <p className="error">{error}</p>}
+      </form>
+    </section>
+  );
+}
+
+function AdminDashboard({ products, audit, setAdminPage }) {
+  const variants = products.flatMap((product) => product.variants);
+  const stats = [
+    ['Total products', products.length],
+    ['Total variants', variants.length],
+    ['Out-of-stock count', variants.filter((variant) => !variant.stock).length],
+    ['Trade-pack count', variants.filter((variant) => variant.tradePack).length]
+  ];
+  return (
+    <>
+      <AdminTitle title="Dashboard" action="Manage products" onAction={() => setAdminPage('products')} />
+      <div className="admin-stats">{stats.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div>
+      <div className="admin-card">
+        <h2>Recent activity</h2>
+        {audit.slice(0, 10).map((item) => <p key={`${item.at}-${item.delta}`}><strong>{new Date(item.at).toLocaleString()}</strong> · {item.action} · {item.entity} · {item.delta}</p>)}
+        {audit.length === 0 && <p>No edits recorded yet.</p>}
+      </div>
+      <div className="admin-actions"><button onClick={() => setAdminPage('products')}>Add product</button><button onClick={() => setAdminPage('products')}>Manage products</button><a href="/">View site</a></div>
+    </>
+  );
+}
+
+function AdminTitle({ title, action, onAction }) {
+  return <div className="admin-title"><div><span className="kicker">Admin</span><h1>{title}</h1></div>{action && <button className="primary" onClick={onAction}>{action}</button>}</div>;
+}
+
+function AdminProducts({ products, saveProducts }) {
+  const [editing, setEditing] = useState(null);
+  const [search, setSearch] = useState('');
+  const filtered = products.filter((product) => product.name.toLowerCase().includes(search.toLowerCase()));
+  function upsert(product) {
+    const saved = { ...product, slug: product.slug || slugify(product.name), id: product.id || slugify(product.name), updatedAt: new Date().toISOString(), images: product.images?.length ? product.images : [`/images/products/${product.slug || slugify(product.name)}/01-hero.svg`] };
+    const exists = products.some((item) => item.id === saved.id);
+    saveProducts(exists ? products.map((item) => (item.id === saved.id ? saved : item)) : [...products, saved], exists ? 'update' : 'create', saved.name, 'Saved product fields and variants');
+    setEditing(null);
+  }
+  function remove(product) {
+    if (confirm(`Delete ${product.name}?`)) saveProducts(products.filter((item) => item.id !== product.id), 'delete', product.name, 'Deleted product');
+  }
+  function toggleFeatured(product) {
+    saveProducts(products.map((item) => (item.id === product.id ? { ...item, featured: !item.featured, updatedAt: new Date().toISOString() } : item)), 'update', product.name, 'Toggled featured');
+  }
+  function toggleStock(product) {
+    saveProducts(products.map((item) => (item.id === product.id ? { ...item, variants: item.variants.map((variant) => ({ ...variant, stock: !item.variants.every((v) => v.stock) })), updatedAt: new Date().toISOString() } : item)), 'update', product.name, 'Toggled stock across variants');
+  }
+  if (editing) return <ProductForm product={editing === 'new' ? blankProduct() : editing} onCancel={() => setEditing(null)} onSave={upsert} />;
+  return (
+    <>
+      <AdminTitle title="Products" action="Add product" onAction={() => setEditing('new')} />
+      <div className="admin-card">
+        <div className="admin-toolbar"><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search products" /><button onClick={() => saveProducts(products.map((product) => ({ ...product, featured: true })), 'bulk', 'products', 'Marked all featured')}>Mark featured</button><button onClick={() => saveProducts(products.map((product) => ({ ...product, archived: true })), 'bulk', 'products', 'Archived all products')}>Archive</button></div>
+        <table className="admin-table"><thead><tr><th>Image</th><th>Name</th><th>Sub-brand</th><th>Category</th><th>Variants</th><th>Price range</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
+          {filtered.map((product) => <tr key={product.id}><td><img src={product.images[0]} alt="" /></td><td><strong>{product.name}</strong><button className="link-button" onClick={() => toggleFeatured(product)}>{product.featured ? 'Featured' : 'Not featured'}</button></td><td>{product.subBrand}</td><td>{categoryText(product.category)}</td><td>{product.variants.length}</td><td>{productPriceRange(product)}</td><td><button className="stock-pill" onClick={() => toggleStock(product)}>{product.variants.some((variant) => variant.stock) ? 'In stock' : 'Out'}</button></td><td><button onClick={() => setEditing(product)}>Edit</button><button className="danger" onClick={() => remove(product)}>Delete</button></td></tr>)}
+        </tbody></table>
+      </div>
+    </>
+  );
+}
+
+function ProductForm({ product, onSave, onCancel }) {
+  const [draft, setDraft] = useState(() => JSON.parse(JSON.stringify(product)));
+  const [tab, setTab] = useState('Basics');
+  const tabs = ['Basics', 'Descriptions', 'Variants', 'Images', 'SEO', 'Status'];
+  function update(field, value) {
+    setDraft((current) => ({ ...current, [field]: value, ...(field === 'name' && !current.slug ? { slug: slugify(value) } : {}) }));
+  }
+  function updateVariant(index, field, value) {
+    setDraft((current) => ({ ...current, variants: current.variants.map((variant, i) => (i === index ? { ...variant, [field]: value } : field === 'primary' && value ? { ...variant, primary: false } : variant)) }));
+  }
+  function addVariant() {
+    setDraft((current) => ({ ...current, variants: [...current.variants, { sku: '', size: '1 Litre', price: 0, stock: true }] }));
+  }
+  function removeVariant(index) {
+    setDraft((current) => ({ ...current, variants: current.variants.filter((_, i) => i !== index) }));
+  }
+  function addImage(event) {
+    const files = [...event.target.files].slice(0, 6 - draft.images.length);
+    const allowed = files.filter((file) => /image\/(jpeg|png|webp|svg\+xml)/.test(file.type) && file.size <= 5 * 1024 * 1024);
+    Promise.all(allowed.map((file) => new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    }))).then((items) => setDraft((current) => ({ ...current, images: [...current.images, ...items].slice(0, 6) })));
+  }
+  return (
+    <div>
+      <div className="admin-title sticky-save"><div><button className="text-button" onClick={onCancel}><ChevronLeft size={16} /> Products</button><h1>{draft.name || 'New product'}</h1><span className="unsaved">Unsaved changes</span></div><button className="primary" onClick={() => onSave(draft)}>Save product</button></div>
+      <div className="editor-layout">
+        <div className="admin-card product-editor">
+          <div className="tabs">{tabs.map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{item}</button>)}</div>
+          {tab === 'Basics' && <div className="form-grid"><input value={draft.name} onChange={(e) => update('name', e.target.value)} placeholder="Name" /><input value={draft.slug} onChange={(e) => update('slug', slugify(e.target.value))} placeholder="Slug" /><select value={draft.subBrand} onChange={(e) => update('subBrand', e.target.value)}><option>Kani Chekku</option><option>Kani Brand</option><option>Sai</option><option>Sai Gold</option></select><select value={draft.category} onChange={(e) => update('category', e.target.value)}><option value="edible-oils">Cooking Oils</option><option value="wellness-oils">Wellness Oils</option><option value="pooja-essentials">Pooja Essentials</option><option value="snacks">Snacks</option></select><textarea value={draft.tagline} onChange={(e) => update('tagline', e.target.value)} placeholder="Tagline" /></div>}
+          {tab === 'Descriptions' && <div className="form-grid"><textarea rows="3" value={draft.shortDesc} onChange={(e) => update('shortDesc', e.target.value)} placeholder="Short description" /><textarea rows="6" value={draft.longDesc} onChange={(e) => update('longDesc', e.target.value)} placeholder="Long description" /><textarea value={draft.nutrition || ''} onChange={(e) => update('nutrition', e.target.value)} placeholder="Nutrition" /><input value={draft.shelfLife} onChange={(e) => update('shelfLife', e.target.value)} placeholder="Shelf life" /></div>}
+          {tab === 'Variants' && <div className="variant-admin">{draft.variants.map((variant, index) => <div className="variant-row" key={`${variant.sku}-${index}`}><input value={variant.sku} onChange={(e) => updateVariant(index, 'sku', e.target.value)} placeholder="SKU" /><input value={variant.size} onChange={(e) => updateVariant(index, 'size', e.target.value)} placeholder="Size" /><input type="number" value={variant.price} onChange={(e) => updateVariant(index, 'price', Number(e.target.value))} placeholder="Price" /><label><input type="checkbox" checked={variant.stock} onChange={(e) => updateVariant(index, 'stock', e.target.checked)} /> Stock</label><label><input type="radio" checked={!!variant.primary} onChange={() => updateVariant(index, 'primary', true)} /> Primary</label><label><input type="checkbox" checked={!!variant.tradePack} onChange={(e) => updateVariant(index, 'tradePack', e.target.checked)} /> Trade</label><button className="danger" onClick={() => removeVariant(index)}>Remove</button></div>)}<button onClick={addVariant}>Add variant</button></div>}
+          {tab === 'Images' && <div className="form-grid"><input type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple onChange={addImage} /><div className="image-admin">{draft.images.map((image, index) => <div key={`${image}-${index}`}><img src={image} alt="" /><input value={image} onChange={(e) => setDraft((current) => ({ ...current, images: current.images.map((item, i) => (i === index ? e.target.value : item)) }))} /><button className="danger" onClick={() => setDraft((current) => ({ ...current, images: current.images.filter((_, i) => i !== index) }))}>Delete</button></div>)}</div></div>}
+          {tab === 'SEO' && <div className="form-grid"><input value={draft.metaTitle || ''} onChange={(e) => update('metaTitle', e.target.value)} placeholder="Meta title" /><textarea value={draft.metaDescription || ''} onChange={(e) => update('metaDescription', e.target.value)} placeholder="Meta description" /><input value={draft.ogImage || ''} onChange={(e) => update('ogImage', e.target.value)} placeholder="OG image override" /></div>}
+          {tab === 'Status' && <div className="form-grid"><input value={draft.badges.join(', ')} onChange={(e) => update('badges', e.target.value.split(',').map((item) => item.trim()).filter(Boolean))} placeholder="Badges" /><input value={draft.tamil || ''} onChange={(e) => update('tamil', e.target.value)} placeholder="Tamil tagline" /><label><input type="checkbox" checked={!!draft.featured} onChange={(e) => update('featured', e.target.checked)} /> Featured</label><label><input type="checkbox" checked={!!draft.archived} onChange={(e) => update('archived', e.target.checked)} /> Archived</label></div>}
+        </div>
+        <div className="live-preview"><ProductCard product={draft} addToCart={() => {}} setQuickView={() => {}} onDetails={() => {}} /></div>
+      </div>
+    </div>
+  );
+}
+
+function AdminOrders({ orders, setOrders, log }) {
+  function fulfil(order) {
+    setOrders(orders.map((item) => (item.id === order.id ? { ...item, status: 'fulfilled' } : item)));
+    log('update', 'order', `${order.id} marked fulfilled`);
+  }
+  return <><AdminTitle title="Orders" /><div className="admin-card"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.customer.name}<br />{order.customer.phone}</td><td>{order.items.map((item) => `${item.name} ${item.size} x${item.qty}`).join(', ')}</td><td>{formatInr(order.total)}</td><td>{order.status}</td><td><button onClick={() => fulfil(order)}>Mark fulfilled</button></td></tr>)}</tbody></table>{orders.length === 0 && <p>No checkout orders captured yet.</p>}</div></>;
+}
+
+function AdminSite({ site, setSite, log }) {
+  const [draft, setDraft] = useState(site);
+  function save() {
+    setSite(draft);
+    log('update', 'site', 'Updated announcements, footer, and shipping settings');
+  }
+  return <><AdminTitle title="Site settings" action="Save site" onAction={save} /><div className="admin-card form-grid"><textarea rows="4" value={draft.announcements.join('\n')} onChange={(e) => setDraft({ ...draft, announcements: e.target.value.split('\n').filter(Boolean) })} /><input value={draft.footer.address} onChange={(e) => setDraft({ ...draft, footer: { ...draft.footer, address: e.target.value } })} placeholder="Address" /><input value={draft.footer.phone} onChange={(e) => setDraft({ ...draft, footer: { ...draft.footer, phone: e.target.value } })} placeholder="Phone" /><input value={draft.footer.whatsapp} onChange={(e) => setDraft({ ...draft, footer: { ...draft.footer, whatsapp: e.target.value } })} placeholder="WhatsApp" /><input value={draft.footer.email} onChange={(e) => setDraft({ ...draft, footer: { ...draft.footer, email: e.target.value } })} placeholder="Email" /><input value={draft.footer.hours} onChange={(e) => setDraft({ ...draft, footer: { ...draft.footer, hours: e.target.value } })} placeholder="Hours" /><input type="number" value={draft.freeShippingThreshold} onChange={(e) => setDraft({ ...draft, freeShippingThreshold: Number(e.target.value) })} /><input type="number" value={draft.shippingRate} onChange={(e) => setDraft({ ...draft, shippingRate: Number(e.target.value) })} /><label><input type="checkbox" checked={draft.bannerEnabled} onChange={(e) => setDraft({ ...draft, bannerEnabled: e.target.checked })} /> Site banner enabled</label><input value={draft.bannerText} onChange={(e) => setDraft({ ...draft, bannerText: e.target.value })} placeholder="Banner text" /></div></>;
+}
+
+function AdminSettings({ products, orders, site, log }) {
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [message, setMessage] = useState('');
+  function changePassword() {
+    if (current !== ADMIN_PASSWORD) {
+      setMessage('Current password did not match.');
+      return;
+    }
+    setMessage('Password change is documented for the production NextAuth migration. In this Vite demo, update ADMIN_PASSWORD in src/products.js.');
+    log('update', 'settings', 'Password change requested');
+  }
+  function backup() {
+    const blob = new Blob([JSON.stringify({ products, orders, site }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sai-agro-backup-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    log('backup', 'settings', 'Downloaded JSON backup');
+  }
+  return <><AdminTitle title="Settings" /><div className="admin-card form-grid"><input type="password" value={current} onChange={(e) => setCurrent(e.target.value)} placeholder="Current password" /><input type="password" value={next} onChange={(e) => setNext(e.target.value)} placeholder="New password" /><button onClick={changePassword}>Change admin password</button><button onClick={backup}>Download data backup</button>{message && <p>{message}</p>}<p className="admin-hint">Production env variables: ADMIN_EMAIL, ADMIN_PASSWORD_HASH, NEXTAUTH_SECRET, NEXTAUTH_URL, BACKUP_S3_BUCKET, BACKUP_S3_KEY, BACKUP_S3_SECRET.</p></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
