@@ -10,8 +10,7 @@ export const categoryLabels = {
 
 export const announcementDefaults = [
   'Free shipping across Tamil Nadu on orders ₹999+',
-  'Cold-pressed weekly · Wood chekku · Made in Karur',
-  'Now shipping pooja lamp oil and Sai Gold palm oil to your doorstep'
+  'Cold-pressed weekly · Wood chekku · Made in Karur'
 ];
 
 export const seedProducts = [

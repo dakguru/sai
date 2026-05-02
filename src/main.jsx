@@ -379,7 +379,7 @@ function App() {
     <>
       {!loaded && <Loader />}
       {page !== 'admin' && <SkipLink />}
-      {page !== 'admin' && page !== 'home' && <AnnouncementBar messages={site.announcements} />}
+      {page !== 'admin' && <AnnouncementBar messages={page === 'home' ? announcementDefaults : site.announcements} />}
       {page !== 'admin' && <OilDropCursor />}
       {page !== 'admin' && <Header page={page} go={go} cartCount={cartCount} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />}
       <main id="content">
@@ -485,7 +485,7 @@ function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
   }, []);
   const overHero = page === 'home' && !scrolled;
   return (
-    <header className={`site-header ${page === 'home' ? 'home-nav no-announcement' : ''} ${overHero ? 'over-hero' : ''}`}>
+    <header className={`site-header ${page === 'home' ? 'home-nav' : ''} ${overHero ? 'over-hero' : ''}`}>
       <button className="brand" onClick={() => go('home')} aria-label="Sai Agro Foods home">
         <span className="logo"><Leaf size={24} /><span /></span>
         <span><strong>Sai Agro Foods</strong><small>Purity in Every Drop</small></span>
