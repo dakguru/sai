@@ -1020,7 +1020,7 @@ function ProprietorPage({ go }) {
       <section className="proprietor-hero">
         <div className="proprietor-hero-copy">
           <span className="kicker">Sai Agro Foods - Leadership</span>
-          <h1>The man behind the bottle.</h1>
+          <h1>The man behind the brand.</h1>
           <p>Dr. Saravana Kumar, Ph.D. - Proprietor.</p>
         </div>
         <ProprietorFrame eager hero />
