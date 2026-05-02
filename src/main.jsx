@@ -34,6 +34,10 @@ import {
   productPriceRange,
   seedProducts
 } from './products.js';
+import AboutHero from './components/hero/AboutHero.jsx';
+import ContactHero from './components/hero/ContactHero.jsx';
+import ProcessHero from './components/hero/ProcessHero.jsx';
+import ProductsHero from './components/hero/ProductsHero.jsx';
 import './styles.css';
 
 const storage = {
@@ -44,6 +48,28 @@ const storage = {
   site: 'sai-agro-site-settings',
   orders: 'sai-agro-orders'
 };
+
+const routePaths = {
+  home: '/',
+  about: '/about',
+  proprietor: '/about/proprietor',
+  products: '/products',
+  process: '/process',
+  recipes: '/recipes',
+  faq: '/faq',
+  contact: '/contact',
+  blog: '/blog',
+  cart: '/cart',
+  checkout: '/checkout',
+  thankyou: '/thank-you',
+  admin: '/admin'
+};
+
+function pageFromPath(pathname) {
+  if (pathname.startsWith('/admin')) return 'admin';
+  const match = Object.entries(routePaths).find(([, path]) => path === pathname);
+  return match?.[0] || 'home';
+}
 
 const siteDefaults = {
   announcements: announcementDefaults,
@@ -73,6 +99,126 @@ const testimonials = [
   ['The gingelly oil tastes traditional and clean. We use it for kuzhambu and podi rice.', 'Meena S.', 'Retail Customer'],
   ['Bulk supply, clear communication, and consistent packing from a dependable local mill.', 'Arun Caterers', 'Food Service Buyer']
 ];
+
+const proprietorContent = {
+  name: 'Dr. Saravana Kumar',
+  credentials: 'Ph.D.',
+  title: 'Proprietor',
+  org: 'Sai Agro Foods',
+  location: 'Pasupathipalayam, Karur - 639 004',
+  photo: '/images/proprietor-md.png',
+  teaser: 'A doctorate-trained engineer and second-generation custodian of a respected Karur agri-food legacy, Dr. Saravana Kumar leads Sai Agro Foods with a quiet conviction: that purity, traceability, and tradition are not luxuries - they are the everyday standard.',
+  pullQuote: {
+    text: "Every drop of oil we produce eventually reaches a mother's kitchen, a child's plate, or an elder's lamp - let us never forget the sanctity of that journey.",
+    attribution: 'Dr. Saravana Kumar'
+  },
+  sections: [
+    {
+      id: 'introduction',
+      title: 'Introduction',
+      body: [
+        'Dr. Saravana Kumar, Ph.D., proprietor of Sai Agro Foods, represents a rare blend of academic discipline, practical manufacturing knowledge, and deep respect for the food traditions of Karur. His leadership is rooted in the belief that an edible oil business must serve families with honesty before it serves markets with scale.',
+        'At Sai Agro Foods, he guides the company with a steady focus on purity, traceability, and consistency. From sourcing agricultural produce to packing the final bottle, his approach keeps the consumer kitchen at the centre of every decision.'
+      ]
+    },
+    {
+      id: 'academic',
+      title: 'Academic Distinction and Technical Mastery',
+      body: [
+        'With doctoral training in engineering, Dr. Saravana Kumar brings a technical mind to every stage of edible oil production. His academic background helps him evaluate machinery, process controls, product consistency, and quality systems with unusual clarity.',
+        'This technical foundation allows Sai Agro Foods to combine traditional food values with modernised production discipline, ensuring that heritage methods are strengthened by measurement, hygiene, and repeatable standards.'
+      ]
+    },
+    {
+      id: 'legacy',
+      title: 'Stewardship of a Family Legacy',
+      body: [
+        'Sai Agro Foods is more than a commercial enterprise; it is a Karur-rooted family legacy carried forward with responsibility. As a second-generation custodian, Dr. Saravana Kumar honours the trust built by the family while preparing the brand for contemporary consumers.',
+        'His stewardship is defined by continuity without complacency. The company remains grounded in local relationships, yet continues to improve its systems, presentation, and reach.'
+      ]
+    },
+    {
+      id: 'expertise',
+      title: 'Expertise in Edible Oils and Agricultural Foods',
+      body: [
+        'Dr. Saravana Kumar has developed hands-on expertise across edible oils, wellness oils, pooja essentials, roasted peanuts, and agricultural food products. He understands that each category has its own rhythm of sourcing, processing, shelf life, aroma, and consumer expectation.',
+        'That understanding shapes the way Sai Agro Foods selects raw material, handles batches, filters oils, and packs products for households, retailers, and trade buyers.'
+      ]
+    },
+    {
+      id: 'quality',
+      title: 'Champion of Food Safety and Quality Assurance',
+      body: [
+        'Food safety is central to his leadership philosophy. For Dr. Saravana Kumar, quality assurance is not a certificate framed on a wall; it is a daily practice visible in cleanliness, batch discipline, packaging care, and transparent communication.',
+        'He believes every product must earn its place in a family kitchen through consistency. This attention to detail is what gives Sai Agro Foods its quiet confidence.'
+      ]
+    },
+    {
+      id: 'expansion',
+      title: 'Expansion Across Tamil Nadu and Neighbouring States',
+      body: [
+        'Under his guidance, Sai Agro Foods is positioned to serve customers across Tamil Nadu, Kerala, Karnataka, Andhra Pradesh, Puducherry, and Telangana. The ambition is practical: grow reach without diluting the standard of the product.',
+        'This expansion is built on reliable supply, clear trade communication, and a brand promise that remains easy for customers to understand: pressed slow, poured pure.'
+      ]
+    },
+    {
+      id: 'global',
+      title: 'A Globally Travelled Visionary',
+      body: [
+        'Dr. Saravana Kumar brings a globally travelled perspective to a deeply local enterprise. Exposure to different markets, production cultures, and consumer expectations has sharpened his understanding of how regional food brands can become more professional without losing their soul.',
+        'His outlook encourages Sai Agro Foods to think beyond commodity selling and toward stronger packaging, better systems, and wider trust.'
+      ]
+    },
+    {
+      id: 'farmers',
+      title: 'Empowering Farmers and Rural Communities',
+      body: [
+        'The strength of an agri-food business begins with the people who grow, handle, and move agricultural produce. Dr. Saravana Kumar values farmer relationships and rural supply networks as essential partners in the Sai Agro Foods story.',
+        'His approach supports fair dealing, dependable procurement, and long-term relationships that allow both producers and consumers to benefit from cleaner food systems.'
+      ]
+    },
+    {
+      id: 'sustainability',
+      title: 'Sustainability and Ethical Business Practices',
+      body: [
+        'Sustainability, for Sai Agro Foods, is not a fashionable slogan. It means respecting raw materials, reducing waste where possible, avoiding careless shortcuts, and building an enterprise that can serve customers responsibly for years.',
+        'Dr. Saravana Kumar connects ethical practice with business strength: a brand that behaves carefully earns durable trust.'
+      ]
+    },
+    {
+      id: 'industry',
+      title: 'Industry Engagement and Thought Leadership',
+      body: [
+        'As proprietor, Dr. Saravana Kumar keeps close watch on the changing expectations of edible oil customers, food safety systems, retail distribution, and agri-food branding. His leadership reflects both industry awareness and practical manufacturing judgement.',
+        'He sees Sai Agro Foods as part of a larger movement toward cleaner, traceable, regionally proud Indian food brands.'
+      ]
+    },
+    {
+      id: 'philosophy',
+      title: 'Personal Philosophy and Leadership Style',
+      body: [
+        'His personal philosophy is simple and demanding: food is medicine when it is made with respect. This belief informs his calm, detail-oriented leadership style and his insistence that everyday products deserve serious care.',
+        'Within the company, he leads with patience, accountability, and a preference for steady improvement over loud promises.'
+      ]
+    },
+    {
+      id: 'future',
+      title: 'Vision for the Future',
+      body: [
+        'Dr. Saravana Kumar envisions Sai Agro Foods growing into a trusted South Indian agri-food brand known for purity, traceability, and dependable service. The future he is building includes stronger product lines, wider distribution, and systems that support both household and trade customers.',
+        'The goal is not only to sell more bottles, but to make every bottle represent the same care that shaped the company at its source.'
+      ]
+    },
+    {
+      id: 'closing',
+      title: 'Closing Note',
+      body: [
+        'Dr. Saravana Kumar stands for a form of leadership that is measured, principled, and rooted in service. His work at Sai Agro Foods carries forward a Karur legacy while preparing it for the expectations of a new generation.',
+        'In his hands, the brand remains close to the soil, close to the kitchen, and close to the standard that matters most: honest food, made well.'
+      ]
+    }
+  ]
+};
 
 const blankProduct = () => ({
   id: `product-${Date.now()}`,
@@ -127,7 +273,7 @@ function categoryText(category) {
 }
 
 function App() {
-  const initialRoute = window.location.pathname.startsWith('/admin') ? 'admin' : 'home';
+  const initialRoute = pageFromPath(window.location.pathname);
   const [page, setPage] = useState(initialRoute);
   const [adminPage, setAdminPage] = useState(window.location.pathname.includes('/admin/products') ? 'products' : 'dashboard');
   const [products, setProducts] = useStoredState(storage.products, seedProducts);
@@ -173,7 +319,7 @@ function App() {
   }, [category, packSize, products, query, sort, subBrand]);
 
   function pushPath(nextPage) {
-    const path = nextPage === 'admin' ? '/admin' : '/';
+    const path = routePaths[nextPage] || '/';
     window.history.pushState({}, '', path);
   }
 
@@ -233,7 +379,7 @@ function App() {
     <>
       {!loaded && <Loader />}
       {page !== 'admin' && <SkipLink />}
-      {page !== 'admin' && <AnnouncementBar messages={site.announcements} />}
+      {page !== 'admin' && page !== 'home' && <AnnouncementBar messages={site.announcements} />}
       {page !== 'admin' && <OilDropCursor />}
       {page !== 'admin' && <Header page={page} go={go} cartCount={cartCount} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />}
       <main id="content">
@@ -253,7 +399,8 @@ function App() {
           />
         )}
         {page === 'home' && <Home products={products} go={go} addToCart={addToCart} setQuickView={setQuickView} setSelectedProduct={setSelectedProduct} />}
-        {page === 'about' && <About />}
+        {page === 'about' && <About go={go} />}
+        {page === 'proprietor' && <ProprietorPage go={go} />}
         {page === 'products' && (
           <Products
             filteredProducts={filteredProducts}
@@ -338,13 +485,13 @@ function Header({ page, go, cartCount, mobileOpen, setMobileOpen }) {
   }, []);
   const overHero = page === 'home' && !scrolled;
   return (
-    <header className={`site-header ${page === 'home' ? 'home-nav' : ''} ${overHero ? 'over-hero' : ''}`}>
+    <header className={`site-header ${page === 'home' ? 'home-nav no-announcement' : ''} ${overHero ? 'over-hero' : ''}`}>
       <button className="brand" onClick={() => go('home')} aria-label="Sai Agro Foods home">
         <span className="logo"><Leaf size={24} /><span /></span>
         <span><strong>Sai Agro Foods</strong><small>Purity in Every Drop</small></span>
       </button>
       <nav className={mobileOpen ? 'open' : ''}>
-        {links.map(([id, label]) => <button key={id} className={page === id ? 'active' : ''} onClick={() => go(id)}>{label}</button>)}
+        {links.map(([id, label]) => <button key={id} className={page === id || (page === 'proprietor' && id === 'about') ? 'active' : ''} onClick={() => go(id)}>{label}</button>)}
       </nav>
       <div className="header-actions">
         <button className="icon-button" onClick={() => go('admin')} aria-label="Open admin">A</button>
@@ -559,7 +706,7 @@ function Products(props) {
   const packSizes = ['All', '200 ml', '500 ml', '1 Litre', '5 Litre', '15 kg Tin', '1 kg Pouch', 'Box'];
   return (
     <>
-      <PageHero title="Shop pure oils and premium peanuts" copy="Filter cold-pressed oils, pooja essentials, snacks, and trade packs from Sai Agro Foods." image="/images/products/kani-chekku-groundnut-oil/05-context.svg" compact />
+      <ProductsHero />
       <section className="shop-layout">
         <aside className="filters">
           <label><Search size={17} /> Search</label>
@@ -751,10 +898,10 @@ function CheckoutPage({ cart, subtotal, go, site, captureOrder }) {
   );
 }
 
-function About() {
+function About({ go }) {
   return (
     <>
-      <PageHero title="Rooted in Karur. Made for honest kitchens." copy="Sai Agro Foods brings agricultural sourcing, edible oil manufacturing, and practical quality systems together at Pasupathipalayam, Karur." image="/images/products/kani-chekku-gingelly-oil/05-context.svg" />
+      <AboutHero />
       <section className="split-section">
         <div className="founder-note">
           <span className="kicker">Our Story</span>
@@ -770,7 +917,182 @@ function About() {
         <SectionTitle kicker="Manufacturing Process" title="A careful path from seed to sealed bottle" />
         <div className="process-grid">{process.map(([title, copy, Icon], index) => <div className="process-card" key={title}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={28} /><h3>{title}</h3><p>{copy}</p></div>)}</div>
       </section>
+      <ProprietorCard go={go} />
     </>
+  );
+}
+
+function ProprietorFrame({ eager = false, hero = false }) {
+  return (
+    <figure className={`proprietor-frame ${hero ? 'hero-frame' : ''}`}>
+      <span className="frame-sprig" aria-hidden="true"><Leaf size={32} /></span>
+      <span className="frame-drop" aria-hidden="true" />
+      <div className="proprietor-inner-frame">
+        <img
+          src={proprietorContent.photo}
+          alt="Dr. Saravana Kumar, Proprietor of Sai Agro Foods, in his office at Pasupathipalayam, Karur."
+          loading={eager ? 'eager' : 'lazy'}
+        />
+      </div>
+      <span className="frame-rule" aria-hidden="true" />
+      <figcaption>Dr. Saravana Kumar at the Sai Agro Foods office, Pasupathipalayam, Karur.</figcaption>
+    </figure>
+  );
+}
+
+function ProprietorCard({ go }) {
+  return (
+    <section className="proprietor-card-section">
+      <div className="proprietor-card-shell">
+        <div className="proprietor-card-heading">
+          <span className="kicker">Leadership</span>
+          <h2>Meet Our Proprietor</h2>
+          <p>A focused introduction to the leadership guiding Sai Agro Foods from Karur to everyday kitchens across South India.</p>
+        </div>
+        <div className="proprietor-card-grid">
+          <ProprietorFrame />
+          <div className="proprietor-card-copy">
+            <span className="kicker">Proprietor</span>
+            <h3>Dr. Saravana Kumar, Ph.D.</h3>
+            <strong>Proprietor - Sai Agro Foods</strong>
+            <p>{proprietorContent.teaser}</p>
+            <button className="proprietor-cta" onClick={() => go('proprietor')}>
+              Read Full Profile <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function setMetaTag(selector, attributes) {
+  let tag = document.head.querySelector(selector);
+  if (!tag) {
+    tag = document.createElement('meta');
+    document.head.appendChild(tag);
+  }
+  Object.entries(attributes).forEach(([key, value]) => tag.setAttribute(key, value));
+}
+
+function ProprietorPage({ go }) {
+  useEffect(() => {
+    document.title = 'About the Proprietor - Dr. Saravana Kumar, Ph.D. | Sai Agro Foods';
+    setMetaTag('meta[name="description"]', {
+      name: 'description',
+      content: 'Meet Dr. Saravana Kumar, Ph.D., proprietor of Sai Agro Foods, Karur - engineer, second-generation custodian, and champion of pure, traceable edible oils across South India.'
+    });
+    setMetaTag('meta[property="og:title"]', { property: 'og:title', content: 'About the Proprietor - Dr. Saravana Kumar, Ph.D. | Sai Agro Foods' });
+    setMetaTag('meta[property="og:description"]', { property: 'og:description', content: 'Engineer, second-generation custodian, and champion of pure, traceable edible oils across South India.' });
+    setMetaTag('meta[property="og:image"]', { property: 'og:image', content: `${window.location.origin}${proprietorContent.photo}` });
+    setMetaTag('meta[property="og:type"]', { property: 'og:type', content: 'profile' });
+    const schema = document.getElementById('proprietor-person-schema') || document.createElement('script');
+    schema.id = 'proprietor-person-schema';
+    schema.type = 'application/ld+json';
+    schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: `${proprietorContent.name}, ${proprietorContent.credentials}`,
+      jobTitle: proprietorContent.title,
+      worksFor: { '@type': 'Organization', name: proprietorContent.org },
+      image: `${window.location.origin}${proprietorContent.photo}`,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Pasupathipalayam',
+        addressLocality: 'Karur',
+        postalCode: '639004',
+        addressRegion: 'Tamil Nadu',
+        addressCountry: 'IN'
+      }
+    });
+    document.head.appendChild(schema);
+  }, []);
+
+  const facts = [
+    ['Doctorate', 'Ph.D. in Engineering', Star],
+    ['Heritage', 'Second-generation custodian', Leaf],
+    ['Reach', 'TN, KL, KA, AP, PY, TS', Truck],
+    ['Philosophy', 'Food is medicine', Heart]
+  ];
+
+  return (
+    <>
+      <section className="proprietor-hero">
+        <div className="proprietor-hero-copy">
+          <span className="kicker">Sai Agro Foods - Leadership</span>
+          <h1>The man behind the bottle.</h1>
+          <p>Dr. Saravana Kumar, Ph.D. - Proprietor.</p>
+        </div>
+        <ProprietorFrame eager hero />
+        <svg className="proprietor-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <path d="M0 58c118 36 237 48 356 36 116-12 193-58 318-58 128 0 209 60 348 66 142 7 269-36 418-76v94H0Z" />
+        </svg>
+      </section>
+
+      <div className="profile-breadcrumb" role="navigation" aria-label="Breadcrumb">
+        <button onClick={() => go('home')}>Home</button><span>/</span>
+        <button onClick={() => go('about')}>About</button><span>/</span>
+        <span>About the Proprietor</span>
+      </div>
+
+      <section className="quick-facts" aria-label="Quick facts">
+        {facts.map(([label, value, Icon]) => (
+          <article key={label}>
+            <Icon size={24} />
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </article>
+        ))}
+      </section>
+
+      <div className="profile-longform">
+        {proprietorContent.sections.map((section, index) => (
+          <React.Fragment key={section.id}>
+            {index === 11 && <ProprietorQuote />}
+            <ProfileSection section={section} index={index} />
+          </React.Fragment>
+        ))}
+      </div>
+
+      <section className="profile-closing-cta">
+        <h3>Taste the standard he stands for.</h3>
+        <p>Explore Sai Agro Foods products - pressed, packed, and delivered with the same care.</p>
+        <div>
+          <button className="primary" onClick={() => go('products')}>View Products</button>
+          <button className="secondary" onClick={() => go('contact')}>Contact Us</button>
+        </div>
+      </section>
+
+      <div className="profile-back-link">
+        <button onClick={() => go('about')}><ChevronLeft size={16} /> Back to About</button>
+      </div>
+    </>
+  );
+}
+
+function ProfileSection({ section, index }) {
+  return (
+    <section className={`profile-section ${index === 0 ? 'profile-intro' : ''}`}>
+      <div>
+        <span className="kicker">Section {String(index + 1).padStart(2, '0')}</span>
+        <h2>{section.title}</h2>
+      </div>
+      <div>
+        {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      </div>
+    </section>
+  );
+}
+
+function ProprietorQuote() {
+  return (
+    <section className="proprietor-quote">
+      <blockquote>
+        <span aria-hidden="true">"</span>
+        <p>{proprietorContent.pullQuote.text}</p>
+        <cite>- {proprietorContent.pullQuote.attribution}</cite>
+      </blockquote>
+    </section>
   );
 }
 
@@ -789,7 +1111,7 @@ function ProcessTeaser({ go }) {
 function ProcessPage({ go }) {
   return (
     <>
-      <PageHero title="From seed to bottle in 14 hours" copy="Cleaning, sun-drying, mara chekku pressing, cloth filtration, and careful bottling at Sai Agro Foods." image="/images/products/kani-brand-coconut-oil/05-context.svg" compact />
+      <ProcessHero />
       <section className="section">
         <SectionTitle kicker="Our Process" title="Why slow pressing still matters" />
         <div className="process-grid">{process.map(([title, copy, Icon], index) => <div className="process-card" key={title}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={28} /><h3>{title}</h3><p>{copy}</p></div>)}</div>
@@ -820,7 +1142,7 @@ function Contact({ site }) {
   const [sent, setSent] = useState(false);
   return (
     <>
-      <PageHero title="Visit or contact Sai Agro Foods" copy={site.footer.address} image="/images/products/sai-roasted-peanuts/05-context.svg" compact />
+      <ContactHero copy={site.footer.address} />
       <section className="contact-grid">
         <div className="contact-card">
           <h2>Manufacturer Direct Enquiries</h2>

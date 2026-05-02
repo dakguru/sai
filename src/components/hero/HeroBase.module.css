@@ -1,0 +1,414 @@
+.hero {
+  --hero-olive: #3f5530;
+  --hero-leaf: #4a6b36;
+  --hero-cream: #f8f1dc;
+  --hero-gold: #c9a14a;
+  --hero-espresso: #2a1f12;
+  --hero-gradient: linear-gradient(135deg, var(--hero-olive), var(--hero-cream));
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  max-width: 100%;
+  min-height: clamp(520px, 58vw, 600px);
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(320px, .78fr);
+  grid-template-areas: "copy art";
+  align-items: center;
+  gap: clamp(26px, 6vw, 82px);
+  padding: calc(92px + env(safe-area-inset-top)) clamp(20px, 6vw, 82px) 86px;
+  overflow: hidden;
+  color: white;
+  background: var(--hero-gradient);
+}
+
+.about {
+  --hero-gradient:
+    radial-gradient(circle at 82% 18%, rgba(201, 161, 74, .52), transparent 28%),
+    linear-gradient(135deg, #354a2a 0%, #4a6b36 45%, #f8f1dc 100%);
+}
+
+.products {
+  --hero-gradient:
+    radial-gradient(circle at 72% 30%, rgba(255, 255, 255, .22), transparent 22%),
+    linear-gradient(180deg, #faf3e0 0%, #c9a14a 52%, #3f5530 100%);
+}
+
+.process {
+  --hero-gradient: radial-gradient(circle at 30% 48%, #2a1f12 0%, #3f5530 50%, #f8f1dc 118%);
+}
+
+.contact {
+  --hero-gradient:
+    linear-gradient(164deg, transparent 0 26%, rgba(201, 161, 74, .34) 26% 36%, transparent 36%),
+    linear-gradient(90deg, #334729 0%, #4a6b36 42%, #f8f1dc 100%);
+}
+
+.noiseSource {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.noise,
+.blobs {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.noise {
+  opacity: .72;
+  mix-blend-mode: overlay;
+}
+
+.blobs span {
+  position: absolute;
+  width: clamp(180px, 26vw, 360px);
+  aspect-ratio: 1;
+  border-radius: 48% 52% 58% 42%;
+  background: rgba(248, 241, 220, .18);
+  filter: blur(28px);
+  animation: heroDrift 24s ease-in-out infinite alternate;
+  transform: translate3d(0, 0, 0);
+}
+
+.blobs span:nth-child(1) { left: -8%; top: 18%; animation-duration: 22s; }
+.blobs span:nth-child(2) { right: 22%; top: -10%; background: rgba(201, 161, 74, .2); animation-duration: 28s; }
+.blobs span:nth-child(3) { right: -8%; bottom: 4%; background: rgba(42, 31, 18, .16); animation-duration: 32s; }
+.process .blobs span:nth-child(1) { animation-duration: 32s; }
+.process .blobs span:nth-child(2) { animation-duration: 38s; }
+
+.copy {
+  grid-area: copy;
+  width: 100%;
+  min-width: 0;
+  max-width: 790px;
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: #ffe6a4;
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 40px;
+  height: 2px;
+  background: var(--hero-gold);
+}
+
+.copy h1 {
+  max-width: 900px;
+  margin: 0 0 20px;
+  color: white;
+  font-size: clamp(2.55rem, 5.65vw, 5.6rem);
+  line-height: .95;
+  letter-spacing: 0;
+}
+
+.about .copy h1,
+.products .copy h1,
+.contact .copy h1 {
+  text-shadow: 0 2px 24px rgba(42, 31, 18, .45);
+}
+
+.copy p {
+  max-width: min(680px, 100%);
+  margin: 0;
+  color: rgba(255, 255, 255, .9);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.products .copy p {
+  display: inline-block;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  background: rgba(248, 241, 220, .08);
+  backdrop-filter: blur(6px);
+}
+
+.illustration {
+  grid-area: art;
+  position: relative;
+  z-index: 1;
+  color: var(--hero-gold);
+  justify-self: center;
+  width: min(44vw, 450px);
+}
+
+.contact .illustration,
+.products .illustration { width: min(46vw, 480px); }
+
+.heroSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  color: currentColor;
+}
+
+.heroSvg text {
+  fill: currentColor;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  z-index: 3;
+  width: 100%;
+  height: 86px;
+  color: #fffaf0;
+  fill: currentColor;
+}
+
+.chevron {
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin-top: 28px;
+  border-right: 3px solid var(--hero-gold);
+  border-bottom: 3px solid var(--hero-gold);
+  transform: rotate(45deg);
+  animation: heroBounce 2.2s ease-in-out infinite;
+}
+
+.seedFloat circle {
+  fill: currentColor;
+  opacity: 0;
+  animation: seedRise 12s ease-in infinite;
+}
+
+.seedFloat circle:nth-child(2) { animation-delay: 2s; }
+.seedFloat circle:nth-child(3) { animation-delay: 4s; }
+.seedFloat circle:nth-child(4) { animation-delay: 6s; }
+.chekkuSpin { animation: heroSpin 24s linear infinite; }
+.chekkuYoke { animation: heroSway 6s ease-in-out infinite; transform-origin: 210px 88px; }
+
+.bottle {
+  animation: bottleBob 5s ease-in-out infinite;
+  animation-delay: var(--phase);
+}
+
+.bottle text { font-size: 11px; }
+.oilFill {
+  fill: rgba(201, 161, 74, .34);
+  animation: oilFill 9s ease-in-out infinite;
+  animation-delay: var(--phase);
+  transform-origin: center bottom;
+}
+
+.shelfLine {
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  animation: shelfBreathe 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.tagFloat path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  opacity: .28;
+  animation: seedRise 15s ease-in infinite;
+}
+
+.tagFloat path:nth-child(2) { animation-delay: 5s; }
+
+.fallingSeeds circle {
+  fill: currentColor;
+  animation: seedDrop 2s ease-in-out infinite;
+  animation-delay: var(--phase);
+}
+
+.pressBars {
+  animation: pressSqueeze 4s ease-in-out infinite;
+  transform-origin: 210px 160px;
+}
+
+.oilWaves {
+  animation: waveShift 3s ease-in-out infinite alternate;
+}
+
+.pressDrop {
+  fill: currentColor;
+  animation: dropFall 6s ease-in-out infinite;
+}
+
+.roadFlow path {
+  stroke-dasharray: 18 18;
+  animation: dashRoad 8s linear infinite;
+}
+
+.pinDrop {
+  animation: pinEnter .8s cubic-bezier(.2, .9, .2, 1.25) both, pinPulse 3s ease-in-out .8s infinite;
+  transform-origin: 222px 168px;
+}
+
+.pinRipple {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  animation: pinRipple 3s ease-out infinite;
+}
+
+.mapPlants {
+  animation: heroSway 6s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.orbitIcon {
+  opacity: .34;
+  animation: orbitContact 18s linear infinite;
+  transform-origin: 222px 168px;
+}
+
+@keyframes heroDrift {
+  to { transform: translate3d(40px, -28px, 0) rotate(12deg); }
+}
+
+@keyframes heroSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heroSway {
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes seedRise {
+  0% { opacity: 0; transform: translateY(26px) scale(.85); }
+  40% { opacity: .42; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.08); }
+}
+
+@keyframes bottleBob {
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes oilFill {
+  0% { transform: scaleY(0); }
+  72% { transform: scaleY(.75); }
+  100% { transform: scaleY(0); }
+}
+
+@keyframes shelfBreathe {
+  50% { transform: scaleX(1.02); }
+}
+
+@keyframes seedDrop {
+  0% { opacity: 0; transform: translateY(-20px); }
+  45% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(55px); }
+}
+
+@keyframes pressSqueeze {
+  50% { transform: scaleX(.85); }
+}
+
+@keyframes waveShift {
+  to { transform: translateX(8px); }
+}
+
+@keyframes dropFall {
+  0% { opacity: 1; r: 4px; transform: translateY(0); }
+  38% { opacity: 1; r: 8px; transform: translateY(0); }
+  100% { opacity: 0; r: 8px; transform: translateY(60px); }
+}
+
+@keyframes dashRoad {
+  to { stroke-dashoffset: -144; }
+}
+
+@keyframes pinEnter {
+  from { transform: translateY(-30px); opacity: 0; }
+}
+
+@keyframes pinPulse {
+  50% { transform: scale(1.06); }
+}
+
+@keyframes pinRipple {
+  from { opacity: .6; transform: scale(1); }
+  to { opacity: 0; transform: scale(2.4); }
+}
+
+@keyframes orbitContact {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heroBounce {
+  50% { transform: translateY(8px) rotate(45deg); }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: min(72vh, 540px);
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "art"
+      "copy";
+    align-content: center;
+    gap: 6px;
+    padding: calc(44px + env(safe-area-inset-top)) 20px 62px;
+  }
+
+  .illustration,
+  .products .illustration,
+  .contact .illustration {
+    width: min(66vw, 174px);
+  }
+
+  .products .illustration {
+    width: min(92vw, 284px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .copy { max-width: 100%; }
+
+  .copy h1 {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: .98;
+  }
+
+  .copy p {
+    font-size: .95rem;
+    line-height: 1.55;
+  }
+
+  .products .copy p { padding: .65rem .8rem; }
+  .seedFloat circle,
+  .tagFloat path,
+  .orbitIcon { animation-play-state: paused; }
+}
+
+@media (max-width: 480px) {
+  .hero { min-height: min(72vh, 520px); }
+  .blobs span { animation-play-state: paused; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero *,
+  .hero *::before,
+  .hero *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
