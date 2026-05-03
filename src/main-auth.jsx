@@ -559,8 +559,8 @@ function App() {
       {!loaded && <Loader />}
       {page !== 'admin' && <SkipLink />}
       {page !== 'admin' && <AnnouncementBar messages={page === 'home' ? announcementDefaults : site.announcements} />}
-      {page !== 'admin' && <OilDropCursor />}
       {page !== 'admin' && <Header page={page} go={go} openAuth={openAuth} cartCount={cartCount} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} session={session} profile={userProfile} authLoading={authLoading} />}
+      {page !== 'admin' && <OilDropCursor />}
       <main id="content">
         {page === 'admin' && (
           <AdminApp
