@@ -19,17 +19,17 @@ npm run dev
 
 Open `http://localhost:5173`.
 
-## Admin
+## Auth And Admin
 
-This Vite build uses client-side demo authentication and localStorage persistence because the current repo is not a Next.js/server codebase.
+This Vite build uses Supabase Auth for login and signup. The admin dashboard is still at `/admin`, but access is limited to profiles whose role is `admin` or `developer`.
 
 - URL: `http://localhost:5173/admin`
-- Email: `admin@saiagrofoods.com`
-- Password: `admin123`
+- Admin ID: `admin@saiagrofoods.com`
+- Developer ID: `developer@saiagrofoods.com`
 
-Admin edits are stored in browser localStorage and reflected on the public storefront immediately. Use Settings -> Download data backup to export products, orders, and site settings.
+Run `supabase/schema.sql` in your Supabase project, then create or sign up those email IDs from `/admin`. Add more staff IDs in the `authorized_users` table before they sign up. Unknown signup emails become `customer` profiles and cannot open the admin dashboard.
 
-For production, migrate the admin to Next.js with NextAuth Credentials, bcrypt, middleware protection, and server-side JSON or database persistence. Required environment variables are listed in `.env.example`.
+Admin edits are written to Supabase tables and reflected on the public storefront. Some backup/order/site UI state still uses browser localStorage for the current Vite build; use Settings -> Download data backup to export products, orders, and site settings.
 
 ## JSON To PostgreSQL + Prisma Plan
 

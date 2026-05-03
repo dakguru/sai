@@ -198,6 +198,57 @@ img { max-width: 100%; display: block; }
 }
 .site-header nav button.active, .site-header nav button:hover { background: rgba(244, 179, 35, .18); color: var(--ink); }
 .header-actions { display: flex; gap: 10px; align-items: center; }
+.auth-link {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(91, 53, 30, .14);
+  border-radius: 999px;
+  background: #fffaf0;
+  color: var(--brown);
+  font-weight: 900;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.auth-link:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(91, 53, 30, .12); background: white; }
+.signup-link {
+  background: var(--gold);
+  border-color: rgba(244, 179, 35, .42);
+  color: var(--ink);
+}
+.signup-link:hover { background: var(--gold-2); }
+.account-menu { position: relative; }
+.account-trigger {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border: .5px solid #E8DFC8;
+  border-radius: 10px;
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+}
+.account-dropdown button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brown);
+  font-weight: 900;
+  text-align: left;
+  padding: 0 12px;
+}
+.account-dropdown button:hover {
+  background: rgba(244, 179, 35, .16);
+  color: var(--ink);
+}
 .icon-button {
   position: relative;
   width: 42px;
@@ -1558,7 +1609,7 @@ footer strong { display: block; margin-bottom: 10px; }
   padding: 24px;
   background: radial-gradient(circle at 20% 0, rgba(244, 179, 35, .2), transparent 34%), var(--cream);
 }
-.admin-login form {
+.admin-login form, .auth-card {
   width: min(460px, 100%);
   display: grid;
   gap: 12px;
@@ -1569,8 +1620,110 @@ footer strong { display: block; margin-bottom: 10px; }
   box-shadow: var(--shadow);
 }
 .admin-login h1 { color: var(--ink); font-size: clamp(2.5rem, 7vw, 4.6rem); }
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid #E8DFC8;
+  border-radius: 8px;
+  background: #fff7e1;
+}
+.auth-tabs button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--brown);
+  font-weight: 900;
+}
+.auth-tabs button.active {
+  background: var(--green);
+  color: var(--cream);
+}
 .admin-hint { font-size: .88rem; margin: 0; }
 .error { color: #a83224; font-weight: 900; }
+.success { color: var(--green); font-weight: 900; }
+.auth-actions { display: grid; gap: 10px; }
+.auth-text-button, .forgot-password {
+  justify-self: center;
+  min-height: auto;
+  padding: 4px 6px;
+  background: transparent;
+  box-shadow: none;
+}
+.forgot-password { margin-top: -2px; }
+.account-page {
+  min-height: calc(100vh - 160px);
+  padding: clamp(36px, 6vw, 72px) clamp(18px, 4vw, 64px) 72px;
+  background: radial-gradient(circle at top right, rgba(244, 179, 35, .14), transparent 30%), var(--cream);
+}
+.account-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+.account-header h1 {
+  color: var(--ink);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  margin-bottom: 12px;
+}
+.account-header p {
+  max-width: 680px;
+  color: var(--muted);
+}
+.account-card {
+  border: .5px solid #E8DFC8;
+  border-radius: 8px;
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.account-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.user-order-list {
+  display: grid;
+  gap: 14px;
+}
+.user-order-card {
+  border: .5px solid #E8DFC8;
+  border-radius: 8px;
+  background: #fffaf0;
+  padding: 18px;
+}
+.user-order-top, .user-order-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+.user-order-top strong, .user-order-bottom strong {
+  color: var(--ink);
+}
+.user-order-top span, .user-order-bottom span {
+  color: var(--muted);
+}
+.order-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(47, 125, 60, .12);
+  color: var(--green) !important;
+  font-size: .82rem;
+  font-weight: 900;
+  text-transform: capitalize;
+}
 .editor-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 330px;
@@ -1630,6 +1783,7 @@ footer strong { display: block; margin-bottom: 10px; }
   .admin-sidebar { position: static; min-height: auto; }
   .admin-stats { grid-template-columns: repeat(2, 1fr); }
   .live-preview { position: static; }
+  .account-grid { grid-template-columns: 1fr; }
   .hero { min-height: calc(100svh - var(--announcement-h)); }
   .hero-panel { max-width: 430px; }
   .trust-band, .testimonial-grid, .process-grid, .product-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1687,6 +1841,10 @@ footer strong { display: block; margin-bottom: 10px; }
     background: rgba(244, 179, 35, .82);
   }
   .menu-button { display: inline-grid; }
+  .header-actions { gap: 8px; }
+  .auth-link { padding: 0 14px; }
+  .account-trigger { max-width: 148px; }
+  .account-dropdown { right: -6px; min-width: 170px; }
   .brand strong { font-size: .95rem; }
   .brand small { font-size: .72rem; }
   .logo { width: 42px; height: 42px; }
